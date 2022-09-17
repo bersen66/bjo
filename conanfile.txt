@@ -2,6 +2,11 @@
 gtest/cci.20210126
 benchmark/1.6.2
 fmt/8.1.1
+boost/1.79.0
+jsoncpp/1.9.5
+yaml-cpp/0.7.0
+spdlog/1.10.0
+
 
 [generators]
 cmake_find_package
