@@ -1,30 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(TEMPLATE VERSION 0.1 LANGUAGES CXX)
+project(core VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
-
-#add_compile_options(
-#        -Werror
-#
-#        -Wall
-#        -Wextra
-#        -Wpedantic
-#
-#        -Wcast-align
-#        -Wcast-qual
-#        -Wconversion
-#        -Wenum-compare
-#        -Wfloat-equal
-#        -Wnon-virtual-dtor
-#        -Wold-style-cast
-#        -Woverloaded-virtual
-#        -Wsign-conversion
-#        -Wsign-promo
-#)
 
 include_directories(include)
 
