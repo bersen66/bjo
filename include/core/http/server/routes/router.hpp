@@ -23,7 +23,7 @@ public:
   };
 
 public:
-  RouterEasyInit SetupRoutes();
+  RouterEasyInit RegisterHandlers();
 
   bool Contains(const std::string &route);
 

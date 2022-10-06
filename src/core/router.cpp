@@ -13,7 +13,7 @@ Router::RouterEasyInit::operator()(METHOD method, const std::string &route,
   return *this;
 }
 
-Router::RouterEasyInit Router::SetupRoutes() {
+Router::RouterEasyInit Router::RegisterHandlers() {
   return Router::RouterEasyInit(this);
 }
 
@@ -48,7 +48,7 @@ DefaultHandler(const http::Request &req) {
 
 RouterPtr DefaultRouter() {
   RouterPtr result = std::make_shared<Router>();
-  result->SetupRoutes()(http::METHOD::GET, "/", DefaultHandler);
+  result->RegisterHandlers()(http::METHOD::GET, "/", DefaultHandler);
   return result;
 }
 
