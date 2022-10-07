@@ -22,6 +22,7 @@ add_library(
      src/core/run_server.cpp
      src/core/run_session.cpp
      src/core/server.cpp
+     src/core/messages.cpp
 )
 
 

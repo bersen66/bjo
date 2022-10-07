@@ -20,6 +20,9 @@ enum class METHODS : unsigned int
   OPTIONS = 1 << 5,
 };
 
+METHODS operator|(const METHODS& lhs, const METHODS& rhs);
+
+
 using Request = boost::beast::http::request<boost::beast::http::string_body>;
 using Response = boost::beast::http::response<boost::beast::http::string_body>;
 

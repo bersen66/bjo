@@ -6,6 +6,7 @@
 
 #define BOOST_STACKTRACE_USE_BACKTRACE
 #include <boost/stacktrace.hpp>
+
 #include <utility>
 
 #define SPDLOG_FMT_EXTERNAL

@@ -19,7 +19,7 @@ public:
   public:
     explicit RouterEasyInit(Router* router_ptr);
 
-    RouterEasyInit& operator()(METHODS method, const std::string& route, RouteHandler handler);
+    RouterEasyInit& operator()(METHODS methods, const std::string& route, RouteHandler handler);
 
   private:
     Router* router_ptr;
@@ -33,7 +33,7 @@ public:
   const HandlersMap& operator[](METHODS method) const;
 
 private:
-  void InsertRoute(METHODS method, const std::string& route, const RouteHandler& handler);
+  void InsertRoute(METHODS methods, const std::string& route, const RouteHandler& handler);
 
 private:
   std::unordered_map<METHODS, HandlersMap> method_map;

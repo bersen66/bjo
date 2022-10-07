@@ -12,47 +12,44 @@
 #include "boost/asio.hpp"
 #include "core/http/server/server.hpp"
 
-
-
-void SoftQuit(int signal) {
+void SoftQuit(int signal)
+{
   spdlog::info("Closed by signal: {}\n", signal);
   std::exit(EXIT_SUCCESS);
 }
 
-void HandleSIGSEGV(int signal) {
-  spdlog::error("\nSIGSEGV OCCURED!\nSIGNAL: {}\nBACKTRACE: {}", signal,
-                boost::stacktrace::stacktrace());
+void HandleSIGSEGV(int signal)
+{
+  spdlog::error("\nSIGSEGV OCCURED!\nSIGNAL: {}\nBACKTRACE: {}", signal, boost::stacktrace::stacktrace());
   std::exit(EXIT_FAILURE);
 }
 
-struct HandlerOne {
+struct HandlerOne
+{
 
-  boost::asio::awaitable<http::Response>
-  operator()(const http::Request) const {
+  boost::asio::awaitable<http::Response> operator()(const http::Request) const
+  {
     http::Response res = {};
     co_return res;
   }
-
 };
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
 
   // Setting up handlers for default OS signals.
-  std::signal(SIGINT, SoftQuit);   // Close by Ctrl + C
-  std::signal(SIGQUIT, SoftQuit);  // Close by Ctrl + \ or Ctrl + 4 or SysRq
-  std::signal(SIGHUP, SoftQuit);   // Close by disconnect
+  std::signal(SIGINT, SoftQuit);  // Close by Ctrl + C
+  std::signal(SIGQUIT, SoftQuit); // Close by Ctrl + \ or Ctrl + 4 or SysRq
+  std::signal(SIGHUP, SoftQuit);  // Close by disconnect
   std::signal(SIGTERM, SoftQuit);
-  std::signal(SIGSEGV, HandleSIGSEGV);  // Smth bad in memory
-
+  std::signal(SIGSEGV, HandleSIGSEGV); // Smth bad in memory
 
   http::server::Server server(http::server::DefaultConfig());
 
   server.RegisterHandlers()
-      (http::METHODS::GET, "^/includes/[0-9]+/$", HandlerOne{})
-      (http::METHODS::GET, "^/$", HandlerOne{})
-  ;
+      (http::METHODS::GET | http::METHODS::POST, "^/includes/[0-9]+/$", HandlerOne{})
+      (http::METHODS::GET, "^/$", HandlerOne{});
   server.Serve();
 
   return 0;
-
 }

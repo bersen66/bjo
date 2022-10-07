@@ -131,7 +131,6 @@ std::optional<ConfigPtr> ConstructConfigFromYaml(YAML::Node&& doc)
     return std::nullopt;
   }
 
-  // if (!doc["HTTP"].IsNull()) {
   ConfigPtr res = DefaultConfig();
   if (!doc["error_logfile"].IsNull())
   {
@@ -168,9 +167,7 @@ std::optional<ConfigPtr> ConstructConfigFromYaml(YAML::Node&& doc)
   }
 
   return res;
-  //}
 
-  // return std::nullopt;
 }
 
 std::optional<ConfigPtr> GetConfigFromYaml(const std::filesystem::path& path_to_config)
