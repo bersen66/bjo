@@ -12,7 +12,7 @@ const RouteHandler &HandlersMap::operator[](const std::string &route) const {
 }
 
 bool HandlersMap::CanHandle(const std::string &route) const {
-  return handlers.contains(route);
+  return GetMatchingPattern(route).has_value();
 }
 
 void HandlersMap::Handle(const std::string &route_pattern,
@@ -24,13 +24,13 @@ void HandlersMap::Handle(const std::string &route_pattern,
 void HandlersMap::InsertHandler(const std::string &route_pattern,
                                 const RouteHandler &handler) {
 
-  route_patterns.insert(route_pattern);
-  handlers[route_pattern] = handler;
+  route_patterns.emplace_back(std::regex(route_pattern));
+  handlers[route_patterns.size()-1] = handler;
 }
 
 const RouteHandler &HandlersMap::GetHandler(const std::string &route) const {
 
-  std::optional<std::string> matching_pattern = GetMatchingPattern(route);
+  std::optional<size_t> matching_pattern = GetMatchingPattern(route);
   if (matching_pattern.has_value()) {
     return handlers.at(matching_pattern.value());
   } else {
@@ -38,20 +38,19 @@ const RouteHandler &HandlersMap::GetHandler(const std::string &route) const {
   }
 }
 
-bool HandlersMap::Match(std::string_view route,
-                        std::string_view pattern) const {
-
-  return route.starts_with(pattern);
+bool HandlersMap::Match(std::string_view route, const std::regex& regex) const {
+  return std::regex_match(route.begin(), route.end(), regex);
 }
 
-std::optional<std::string>
+std::optional<size_t>
 HandlersMap::GetMatchingPattern(const std::string &route) const {
 
-  for (const auto &pattern : route_patterns) {
-    if (Match(route, pattern)) {
-      return std::make_optional(pattern);
+  for (size_t i = 0; i < route_patterns.size(); i++) {
+    if (Match(route, route_patterns[i])) {
+      return std::make_optional(i);
     }
   }
+
   return std::nullopt;
 }
 

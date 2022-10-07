@@ -1,14 +1,3 @@
-#include <adder/adder.hpp>
-#include <benchmark/benchmark.h>
-
-void AddingBenchmark(benchmark::State& state) {
-  while (state.KeepRunning()) {
-    benchmark::DoNotOptimize(
-        adder::Add(21, 13)
-        );
-  }
+int main() {
+  return 0;
 }
-
-BENCHMARK(AddingBenchmark);
-
-BENCHMARK_MAIN();

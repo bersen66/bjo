@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(TEMPLATE_BENCHMARKS)
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} APPLICATION)
+target_link_libraries(${PROJECT_NAME} core)
 
 find_package(benchmark REQUIRED)
 if (benchmark_FOUND)

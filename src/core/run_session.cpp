@@ -17,12 +17,12 @@
 namespace http {
 namespace server {
 
-METHOD GetMethod(const Request &req) {
+METHODS GetMethod(const Request &req) {
   namespace bhttp = boost::beast::http;
-  static const std::unordered_map<bhttp::verb, METHOD> resolver = {
-      {bhttp::verb::get, METHOD::GET},
-      {bhttp::verb::delete_, METHOD::DELETE},
-      {bhttp::verb::post, METHOD::POST},
+  static const std::unordered_map<bhttp::verb, METHODS> resolver = {
+      {bhttp::verb::get, METHODS::GET},
+      {bhttp::verb::delete_, METHODS::DELETE},
+      {bhttp::verb::post, METHODS::POST},
   };
 
   return resolver.at(req.method());

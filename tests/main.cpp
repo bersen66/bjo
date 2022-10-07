@@ -1,13 +1,56 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
-TEST(TestADDING, test1) {
+#include <fmt/core.h>
+#include <fmt/ostream.h>
 
+#define SPDLOG_FMT_EXTERNAL
+#include <spdlog/spdlog.h>
+
+#define BOOST_STACKTRACE_USE_BACKTRACE
+#include <boost/stacktrace.hpp>
+
+#include "boost/asio.hpp"
+#include "core/http/server/server.hpp"
+
+
+
+void SoftQuit(int signal) {
+  spdlog::info("Closed by signal: {}\n", signal);
+  std::exit(EXIT_SUCCESS);
+}
+
+void HandleSIGSEGV(int signal) {
+  spdlog::error("\nSIGSEGV OCCURED!\nSIGNAL: {}\nBACKTRACE: {}", signal,
+                boost::stacktrace::stacktrace());
+  std::exit(EXIT_FAILURE);
 }
 
 
+struct HandlerOne{
+  boost::asio::awaitable<http::Response> operator()(const http::Request) {
 
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  }
+};
+
+int main(int argc, char** argv) {
+  // Setting up handlers for default OS signals.
+  std::signal(SIGINT, SoftQuit);   // Close by Ctrl + C
+  std::signal(SIGQUIT, SoftQuit);  // Close by Ctrl + \ or Ctrl + 4 or SysRq
+  std::signal(SIGHUP, SoftQuit);   // Close by disconnect
+  std::signal(SIGTERM, SoftQuit);
+  std::signal(SIGSEGV, HandleSIGSEGV);  // Smth bad in memory
+
+
+  boost::asio::io_context ioc{2};
+
+
+  http::server::Server server(
+      ioc,
+      http::server::DefaultConfig(),
+      http::server::DefaultRouter());
+
+
+  server.RegisterHandlers()
+      (http::METHODS::GET, "^/includes/[0-9]+/$", HandlerOne{})
+  ;
 }

@@ -15,7 +15,7 @@ public:
   public:
     explicit RouterEasyInit(Router *router_ptr);
 
-    RouterEasyInit &operator()(METHOD method, const std::string &route,
+    RouterEasyInit &operator()(METHODS method, const std::string &route,
                                RouteHandler handler);
 
   private:
@@ -27,14 +27,14 @@ public:
 
   bool Contains(const std::string &route);
 
-  const HandlersMap &operator[](METHOD method) const;
+  const HandlersMap &operator[](METHODS method) const;
 
 private:
-  void InsertRoute(METHOD method, const std::string &route,
+  void InsertRoute(METHODS method, const std::string &route,
                    RouteHandler handler);
 
 private:
-  std::unordered_map<METHOD, HandlersMap> method_map;
+  std::unordered_map<METHODS, HandlersMap> method_map;
 };
 
 using RouterPtr = std::shared_ptr<Router>;

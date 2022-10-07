@@ -11,7 +11,7 @@
 namespace http {
 namespace server {
 
-class HandlersMap : boost::noncopyable {
+class HandlersMap : private boost::noncopyable {
 public:
   HandlersMap() = default;
 
@@ -27,20 +27,15 @@ private:
 
   const RouteHandler &GetHandler(const std::string &route) const;
 
-  bool Match(std::string_view route, std::string_view pattern) const;
+  bool Match(std::string_view route, const std::regex& pattern) const;
 
-  std::optional<std::string> GetMatchingPattern(const std::string &route) const;
-
-private:
-  struct Sorter {
-    bool operator()(const std::string &lhs, const std::string &rhs) const {
-      return lhs > rhs;
-    }
-  };
+  std::optional<size_t> GetMatchingPattern(const std::string &route) const;
 
 private:
-  std::set<std::string, Sorter> route_patterns;
-  std::unordered_map<std::string, RouteHandler> handlers; // {pattern, handler}
+
+private:
+  std::vector<std::regex> route_patterns;
+  std::unordered_map<size_t, RouteHandler> handlers; // {pattern_idx, handler}
 };
 
 } // namespace server

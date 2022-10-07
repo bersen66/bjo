@@ -6,7 +6,6 @@ AlignEscapedNewlines: true
 ReferenceAlignment: Left
 DerivePointerAlignment: false
 IndentAccessModifiers: false
-AccessModifierOffset: -4
-EmptyLineAfterAccessModifier: Always
+AccessModifierOffset: -2
 PointerAlignment: Left
-IndentWidth: 4
+IndentWidth: 2

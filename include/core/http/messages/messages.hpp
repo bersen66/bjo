@@ -8,16 +8,16 @@ enum class MESSAGE : bool {
   RESPONSE = false,
 };
 
-enum class METHOD {
-  GET,
-  POST,
-  PUT,
-  PATCH,
-  DELETE,
-  OPTIONS,
+enum class METHODS : unsigned int {
+  GET = 1 << 0,
+  POST = 1 << 1,
+  PUT = 1 << 2,
+  PATCH = 1 << 3,
+  DELETE = 1 << 4,
+  OPTIONS = 1 << 5,
 };
 
 using Request = boost::beast::http::request<boost::beast::http::string_body>;
 using Response = boost::beast::http::response<boost::beast::http::string_body>;
 
-} // namespace http
+}  // namespace http

@@ -6,6 +6,7 @@ boost/1.79.0
 jsoncpp/1.9.5
 yaml-cpp/0.7.0
 spdlog/1.10.0
+ctre/3.7.1
 
 
 [generators]

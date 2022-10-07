@@ -7,7 +7,8 @@ Router::RouterEasyInit::RouterEasyInit(Router *router_ptr)
     : router_ptr(router_ptr) {}
 
 Router::RouterEasyInit &
-Router::RouterEasyInit::operator()(METHOD method, const std::string &route,
+Router::RouterEasyInit::operator()(
+    METHODS method, const std::string &route,
                                    RouteHandler handler) {
   router_ptr->InsertRoute(method, route, handler);
   return *this;
@@ -26,11 +27,11 @@ bool Router::Contains(const std::string &route) {
   return false;
 }
 
-const HandlersMap &Router::operator[](METHOD method) const {
+const HandlersMap &Router::operator[](METHODS method) const {
   return method_map.at(method);
 }
 
-void Router::InsertRoute(METHOD method, const std::string &route,
+void Router::InsertRoute(METHODS method, const std::string &route,
                          RouteHandler handler) {
   method_map[method].Handle(route, handler);
 }
@@ -48,7 +49,7 @@ DefaultHandler(const http::Request &req) {
 
 RouterPtr DefaultRouter() {
   RouterPtr result = std::make_shared<Router>();
-  result->RegisterHandlers()(http::METHOD::GET, "/", DefaultHandler);
+  result->RegisterHandlers()(http::METHODS::GET, "/", DefaultHandler);
   return result;
 }
 
