@@ -6,32 +6,34 @@
 
 #include "core/http/server/routes/handlers/handlers_map.hpp"
 
-namespace http {
-namespace server {
+namespace http
+{
+namespace server
+{
 
-class Router : boost::noncopyable {
+class Router : boost::noncopyable
+{
 public:
-  class RouterEasyInit : boost::noncopyable {
+  class RouterEasyInit : boost::noncopyable
+  {
   public:
-    explicit RouterEasyInit(Router *router_ptr);
+    explicit RouterEasyInit(Router* router_ptr);
 
-    RouterEasyInit &operator()(METHODS method, const std::string &route,
-                               RouteHandler handler);
+    RouterEasyInit& operator()(METHODS method, const std::string& route, RouteHandler handler);
 
   private:
-    Router *router_ptr;
+    Router* router_ptr;
   };
 
 public:
   RouterEasyInit RegisterHandlers();
 
-  bool Contains(const std::string &route);
+  bool Contains(const std::string& route);
 
-  const HandlersMap &operator[](METHODS method) const;
+  const HandlersMap& operator[](METHODS method) const;
 
 private:
-  void InsertRoute(METHODS method, const std::string &route,
-                   RouteHandler handler);
+  void InsertRoute(METHODS method, const std::string& route, const RouteHandler& handler);
 
 private:
   std::unordered_map<METHODS, HandlersMap> method_map;

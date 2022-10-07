@@ -3,11 +3,12 @@
 #include "core/http/server/config/config.hpp"
 #include "core/http/server/routes/router.hpp"
 
-namespace http {
-namespace server {
+namespace http
+{
+namespace server
+{
 
-void RunServer(const ConfigPtr &config = DefaultConfig(),
-               const RouterPtr &router = EmptyRouter());
+void RunServer(const ConfigPtr& config = DefaultConfig(), const RouterPtr& router = EmptyRouter());
 
 } // namespace server
 } // namespace http

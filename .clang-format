@@ -1,8 +1,7 @@
 Language: Cpp
 
-BasedOnStyle: Google
+BasedOnStyle: Microsoft
 
-AlignEscapedNewlines: true
 ReferenceAlignment: Left
 DerivePointerAlignment: false
 IndentAccessModifiers: false

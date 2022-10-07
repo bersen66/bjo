@@ -6,13 +6,16 @@
 #include "core/http/server/run_server.hpp"
 #include "core/http/server/session/session.hpp"
 
-namespace http {
-namespace server {
+namespace http
+{
+namespace server
+{
 
-class Server {
+class Server
+{
 public:
-  explicit Server(const ConfigPtr& config,
-                  const RouterPtr& router);
+  explicit Server(const ConfigPtr& config = http::server::DefaultConfig(),
+                  const RouterPtr& router = http::server::EmptyRouter());
 
   Router::RouterEasyInit RegisterHandlers();
 
@@ -25,5 +28,5 @@ private:
   ConfigPtr config_ptr_;
 };
 
-}  // namespace server
-}  // namespace http
+} // namespace server
+} // namespace http

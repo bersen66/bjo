@@ -4,11 +4,12 @@
 
 #include "core/http/messages/messages.hpp"
 
-namespace http {
-namespace server {
+namespace http
+{
+namespace server
+{
 
-using RouteHandler =
-   std::function<boost::asio::awaitable<Response>(const Request &)>;
+using RouteHandler = std::function<boost::asio::awaitable<Response>(const Request&)>;
 
 } // namespace server
 } // namespace http

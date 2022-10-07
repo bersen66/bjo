@@ -25,15 +25,18 @@ void HandleSIGSEGV(int signal) {
   std::exit(EXIT_FAILURE);
 }
 
+struct HandlerOne {
 
-struct HandlerOne{
-  boost::asio::awaitable<http::Response> operator()(const http::Request) {
+  boost::asio::awaitable<http::Response>
+  operator()(const http::Request) const {
     http::Response res = {};
     co_return res;
   }
+
 };
 
 int main(int argc, char** argv) {
+
   // Setting up handlers for default OS signals.
   std::signal(SIGINT, SoftQuit);   // Close by Ctrl + C
   std::signal(SIGQUIT, SoftQuit);  // Close by Ctrl + \ or Ctrl + 4 or SysRq
@@ -42,16 +45,14 @@ int main(int argc, char** argv) {
   std::signal(SIGSEGV, HandleSIGSEGV);  // Smth bad in memory
 
 
-
-  http::server::Server server(
-      http::server::DefaultConfig(),
-      http::server::EmptyRouter());
-
+  http::server::Server server(http::server::DefaultConfig());
 
   server.RegisterHandlers()
       (http::METHODS::GET, "^/includes/[0-9]+/$", HandlerOne{})
       (http::METHODS::GET, "^/$", HandlerOne{})
   ;
-
   server.Serve();
+
+  return 0;
+
 }

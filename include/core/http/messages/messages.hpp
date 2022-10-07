@@ -1,14 +1,17 @@
 #pragma once
 #include <boost/beast.hpp>
 
-namespace http {
+namespace http
+{
 
-enum class MESSAGE : bool {
+enum class MESSAGE : bool
+{
   REQUEST = true,
   RESPONSE = false,
 };
 
-enum class METHODS : unsigned int {
+enum class METHODS : unsigned int
+{
   GET = 1 << 0,
   POST = 1 << 1,
   PUT = 1 << 2,
@@ -20,4 +23,4 @@ enum class METHODS : unsigned int {
 using Request = boost::beast::http::request<boost::beast::http::string_body>;
 using Response = boost::beast::http::response<boost::beast::http::string_body>;
 
-}  // namespace http
+} // namespace http
