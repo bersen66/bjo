@@ -19,7 +19,7 @@ public:
   public:
     explicit RouterEasyInit(Router* router_ptr);
 
-    RouterEasyInit& operator()(METHODS methods, const std::string& route, RouteHandler handler);
+    RouterEasyInit& operator()(METHODS methods, const std::string& route, const RouteHandler& handler);
 
   private:
     Router* router_ptr;

@@ -10,7 +10,7 @@ Router::RouterEasyInit::RouterEasyInit(Router* router_ptr) : router_ptr(router_p
 }
 
 Router::RouterEasyInit& Router::RouterEasyInit::operator()(METHODS methods, const std::string& route,
-                                                           RouteHandler handler)
+                                                           const RouteHandler& handler)
 {
   router_ptr->InsertRoute(methods, route, handler);
   return *this;
