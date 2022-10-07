@@ -11,14 +11,15 @@ namespace server {
 
 class Server {
 public:
-  explicit Server(boost::asio::io_context& ioc,
-                  const ConfigPtr& config,
+  explicit Server(const ConfigPtr& config,
                   const RouterPtr& router);
 
   Router::RouterEasyInit RegisterHandlers();
 
+  void Serve();
+
 private:
-  boost::asio::io_context& io_context_;
+  boost::asio::io_context io_context_;
   Listener listener_;
   RouterPtr router_ptr_;
   ConfigPtr config_ptr_;

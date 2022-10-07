@@ -13,7 +13,7 @@ public:
   Listener(boost::asio::io_context& ioc,
            const boost::asio::ip::tcp::endpoint& ep,
            const ConfigPtr& config = DefaultConfig(),
-           const RouterPtr& router = DefaultRouter());
+           const RouterPtr& router = EmptyRouter());
 
   ~Listener();
   boost::asio::awaitable<void> Listen();

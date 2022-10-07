@@ -11,7 +11,7 @@ namespace server {
 boost::asio::awaitable<void>
 RunSession(boost::asio::ip::tcp::socket client_socket,
            const ConfigPtr &config = DefaultConfig(),
-           const RouterPtr &routes = DefaultRouter());
+           const RouterPtr &routes = EmptyRouter());
 
 } // namespace server
 } // namespace http

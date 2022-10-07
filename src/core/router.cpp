@@ -47,9 +47,8 @@ DefaultHandler(const http::Request &req) {
   co_return result;
 }
 
-RouterPtr DefaultRouter() {
+RouterPtr EmptyRouter() {
   RouterPtr result = std::make_shared<Router>();
-  result->RegisterHandlers()(http::METHODS::GET, "/", DefaultHandler);
   return result;
 }
 

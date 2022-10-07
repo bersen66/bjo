@@ -7,7 +7,7 @@ namespace http {
 namespace server {
 
 void RunServer(const ConfigPtr &config = DefaultConfig(),
-               const RouterPtr &router = DefaultRouter());
+               const RouterPtr &router = EmptyRouter());
 
 } // namespace server
 } // namespace http

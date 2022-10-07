@@ -28,7 +28,8 @@ void HandleSIGSEGV(int signal) {
 
 struct HandlerOne{
   boost::asio::awaitable<http::Response> operator()(const http::Request) {
-
+    http::Response res = {};
+    co_return res;
   }
 };
 
@@ -41,16 +42,16 @@ int main(int argc, char** argv) {
   std::signal(SIGSEGV, HandleSIGSEGV);  // Smth bad in memory
 
 
-  boost::asio::io_context ioc{2};
-
 
   http::server::Server server(
-      ioc,
       http::server::DefaultConfig(),
-      http::server::DefaultRouter());
+      http::server::EmptyRouter());
 
 
   server.RegisterHandlers()
       (http::METHODS::GET, "^/includes/[0-9]+/$", HandlerOne{})
+      (http::METHODS::GET, "^/$", HandlerOne{})
   ;
+
+  server.Serve();
 }

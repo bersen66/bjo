@@ -39,7 +39,7 @@ private:
 
 using RouterPtr = std::shared_ptr<Router>;
 
-RouterPtr DefaultRouter();
+RouterPtr EmptyRouter();
 
 } // namespace server
 } // namespace http
