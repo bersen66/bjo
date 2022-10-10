@@ -5,6 +5,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <json/json.h>
 
 namespace parsers
 {
@@ -27,5 +28,7 @@ std::optional<std::string> GetTextFromFile(const std::filesystem::path& path_to_
 int NextInt(std::string_view& s, std::string_view delimeter = " ");
 
 double NextDouble(std::string_view& s, std::string_view delimeter = " ");
+
+Json::Value ParseJson(const std::filesystem::path& path);
 
 } // namespace parsers

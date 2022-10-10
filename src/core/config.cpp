@@ -12,6 +12,7 @@
 #include <unordered_map>
 
 #include "core/http/server/config/config.hpp"
+#include "core/parsing_stuff/parsing_stuff.hpp"
 
 namespace http
 {
@@ -42,14 +43,6 @@ FileExtensionId GetFileExtensionId(const std::filesystem::path& extension)
 ConfigPtr DefaultConfig()
 {
   return std::make_shared<Config>();
-}
-
-Json::Value ParseJson(const std::filesystem::path& path)
-{
-  Json::Value result;
-  std::ifstream config_file(path);
-  config_file >> result;
-  return result;
 }
 
 std::optional<ConfigPtr> ConstructConfigFromJson(Json::Value&& doc)
@@ -108,7 +101,7 @@ std::optional<ConfigPtr> GetConfigFromJson(const std::filesystem::path& path_to_
 {
   try
   {
-    std::optional<ConfigPtr> result = ConstructConfigFromJson(std::move(ParseJson(path_to_config)));
+    std::optional<ConfigPtr> result = ConstructConfigFromJson(std::move(parsers::ParseJson(path_to_config)));
     return result;
   }
   catch (std::exception& exc)

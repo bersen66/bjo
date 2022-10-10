@@ -9,10 +9,9 @@ Router::RouterEasyInit::RouterEasyInit(Router* router_ptr) : router_ptr(router_p
 {
 }
 
-Router::RouterEasyInit& Router::RouterEasyInit::operator()(METHODS methods, const std::string& route,
-                                                           const RouteHandler& handler)
+Router::RouterEasyInit& Router::RouterEasyInit::operator()(METHODS methods, HandlerHolder handler)
 {
-  router_ptr->InsertRoute(methods, route, handler);
+  router_ptr->InsertHandler(methods, std::move(handler));
   return *this;
 }
 
@@ -21,7 +20,7 @@ Router::RouterEasyInit Router::RegisterHandlers()
   return Router::RouterEasyInit(this);
 }
 
-bool Router::Contains(const std::string& route)
+bool Router::Contains(std::string_view route) const
 {
   for (const auto& [method, handlers_map] : method_map)
   {
@@ -63,30 +62,30 @@ bool HasOptionsFlag(METHODS methods) {
 }
 
 
-void Router::InsertRoute(METHODS methods, const std::string& route, const RouteHandler& handler)
+void Router::InsertHandler(METHODS methods, HandlerHolder&& handler)
 {
   if (HasGetFlag(methods) ) {
-    method_map[METHODS::GET].Handle(route, handler);
+    method_map[METHODS::GET].InsertHandler(std::move(handler));
   }
 
   if (HasPostFlag(methods) ) {
-    method_map[METHODS::POST].Handle(route, handler);
+    method_map[METHODS::POST].InsertHandler(std::move(handler));
   }
 
   if (HasPutFlag(methods) ) {
-    method_map[METHODS::PUT].Handle(route, handler);
+    method_map[METHODS::PUT].InsertHandler(std::move(handler));
   }
 
   if (HasDeleteFlag(methods) ) {
-    method_map[METHODS::DELETE].Handle(route, handler);
+    method_map[METHODS::DELETE].InsertHandler(std::move(handler));
   }
 
   if (HasPatchFlag(methods) ) {
-    method_map[METHODS::PATCH].Handle(route, handler);
+    method_map[METHODS::PATCH].InsertHandler(std::move(handler));
   }
 
   if (HasOptionsFlag(methods)) {
-    method_map[METHODS::OPTIONS].Handle(route, handler);
+    method_map[METHODS::OPTIONS].InsertHandler(std::move(handler));
   }
 }
 

@@ -53,8 +53,8 @@ boost::asio::awaitable<void> RunSession(boost::asio::ip::tcp::socket client_sock
     spdlog::info("Fetched request!\n{}\n", request);
     try
     {
-      auto handler = router_map[GetMethod(request)][GetRoute(request)];
-      Response res = co_await handler(request);
+      const auto& handler = router_map[GetMethod(request)][GetRoute(request)];
+      Response res = co_await handler->Handle(request);
       spdlog::info("Generated response:\n {}\n", res);
       co_await conn.SendResponse(std::move(res));
     }

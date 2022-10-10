@@ -8,6 +8,8 @@
 #include <string_view>
 #include <vector>
 
+#include <json/json.h>
+
 namespace parsers
 {
 
@@ -104,6 +106,14 @@ double NextDouble(std::string_view& s, std::string_view delimeter)
 {
   std::string_view token = ReadToken(s, delimeter);
   return boost::lexical_cast<double>(token);
+}
+
+Json::Value ParseJson(const std::filesystem::path& path)
+{
+  Json::Value result;
+  std::ifstream config_file(path);
+  config_file >> result;
+  return result;
 }
 
 } // namespace parsers

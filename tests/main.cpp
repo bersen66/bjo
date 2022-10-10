@@ -12,6 +12,8 @@
 #include "boost/asio.hpp"
 #include "core/http/server/server.hpp"
 
+#include <ctre.hpp>
+
 void SoftQuit(int signal)
 {
   spdlog::info("Closed by signal: {}\n", signal);
@@ -24,16 +26,53 @@ void HandleSIGSEGV(int signal)
   std::exit(EXIT_FAILURE);
 }
 
-struct HandlerOne
-{
+class Handler : public http::server::HandlerBase {
+public:
+  static constexpr ctll::fixed_string route = "/First/[0-9a-z]+";
 
-  boost::asio::awaitable<http::Response> operator()(const http::Request) const
-  {
-    http::Response res = {};
-    co_return res;
+  bool CanHandle(std::string_view url) const override {
+    return ctre::match<route>(url);
   }
 
+  boost::asio::awaitable<http::Response> Handle(const http::Request&) const override {
+    http::Response result = {};
+    result.body() = "<h1>First<\h1>";
+    result.prepare_payload();
+    co_return result;
+  }
 };
+
+class HandlerTwo : public http::server::HandlerBase {
+public:
+  static constexpr ctll::fixed_string route = "/Second/[0-9a-z]+";
+
+  bool CanHandle(std::string_view url) const override {
+    return ctre::match<route>(url);
+  }
+  boost::asio::awaitable<http::Response> Handle(const http::Request&) const override {
+    http::Response result = {};
+    result.body() = "<h1>Second<\h1>";
+    result.prepare_payload();
+    co_return result;
+  }
+};
+
+class HandleFavicon : public http::server::HandlerBase {
+public:
+  static constexpr ctll::fixed_string route = "/favicon.ico";
+
+  bool CanHandle(std::string_view url) const override {
+    return ctre::match<route>(url);
+  }
+  boost::asio::awaitable<http::Response> Handle(const http::Request& req) const override {
+    http::Response result = {boost::beast::http::status::bad_request, req.version()};
+    result.prepare_payload();
+    co_return result;
+  }
+};
+
+
+
 
 int main(int argc, char** argv)
 {
@@ -48,8 +87,11 @@ int main(int argc, char** argv)
   http::server::Server server(http::server::DefaultConfig());
 
   server.RegisterHandlers()
-      (http::METHODS::GET | http::METHODS::POST, "^/includes/[0-9]+/$", HandlerOne{})
-      (http::METHODS::GET, "^/$", HandlerOne{});
+      (http::METHODS::GET, std::make_unique<Handler>())
+      (http::METHODS::GET, std::make_unique<HandlerTwo>())
+      (http::METHODS::GET, std::make_unique<HandleFavicon>())
+  ;
+
   server.Serve();
 
   return 0;

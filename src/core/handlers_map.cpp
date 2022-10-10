@@ -9,7 +9,7 @@ namespace http
 {
 namespace server
 {
-
+/*
 const RouteHandler& HandlersMap::operator[](const std::string& route) const
 {
   return GetHandler(route);
@@ -20,10 +20,17 @@ bool HandlersMap::CanHandle(const std::string& route) const
   return GetMatchingPattern(route).has_value();
 }
 
-void HandlersMap::Handle(const std::string& route_pattern, const RouteHandler& handler)
+void HandlersMap::InsertHandler(const std::string& route_pattern, const RouteHandler& handler)
 {
   InsertHandler(route_pattern, handler);
 }
+
+
+
+
+
+
+
 
 void HandlersMap::InsertHandler(const std::string& route_pattern, const RouteHandler& handler)
 {
@@ -51,15 +58,43 @@ bool HandlersMap::Match(std::string_view route, const std::regex& regex) const
 
 std::optional<size_t> HandlersMap::GetMatchingPattern(const std::string& route) const
 {
-  for (size_t i = 0; i < route_patterns.size(); i++)
-  {
-    if (Match(route, route_patterns[i]))
-    {
-      return std::make_optional(i);
-    }
-  }
+//  for (size_t i = 0; i < route_patterns.size(); i++)
+//  {
+//    if (Match(route, route_patterns[i]))
+//    {
+//      return std::make_optional(i);
+//    }
+//  }
 
   return std::nullopt;
+}
+
+*/
+
+const HandlerHolder& HandlersMap::operator[](std::string_view route) const {
+  return GetHandler(route);
+}
+
+bool HandlersMap::CanHandle(std::string_view route) const {
+  for (const auto& handler_ptr : handlers_) {
+    if (handler_ptr->CanHandle(route)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void HandlersMap::InsertHandler(HandlerHolder&& handler) {
+  handlers_.emplace_back(std::move(handler));
+}
+const HandlerHolder& HandlersMap::GetHandler(std::string_view route) const
+{
+  for (const auto& handler_ptr : handlers_) {
+    if (handler_ptr->CanHandle(route)) {
+      return handler_ptr;
+    }
+  }
+  throw std::runtime_error("HandlersMap: no handlers for this route.");
 }
 
 } // namespace server
