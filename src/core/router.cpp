@@ -37,54 +37,65 @@ const HandlersMap& Router::operator[](METHODS method) const
   return method_map.at(method);
 }
 
-bool HasGetFlag(METHODS methods) {
+bool HasGetFlag(METHODS methods)
+{
   return static_cast<unsigned int>(METHODS::GET) & static_cast<unsigned int>(methods);
 }
 
-bool HasPutFlag(METHODS methods) {
+bool HasPutFlag(METHODS methods)
+{
   return static_cast<unsigned int>(METHODS::PUT) & static_cast<unsigned int>(methods);
 }
 
-bool HasPostFlag(METHODS methods) {
+bool HasPostFlag(METHODS methods)
+{
   return static_cast<unsigned int>(METHODS::POST) & static_cast<unsigned int>(methods);
 }
 
-bool HasDeleteFlag(METHODS methods) {
+bool HasDeleteFlag(METHODS methods)
+{
   return static_cast<unsigned int>(METHODS::DELETE) & static_cast<unsigned int>(methods);
 }
 
-bool HasPatchFlag(METHODS methods) {
+bool HasPatchFlag(METHODS methods)
+{
   return static_cast<unsigned int>(METHODS::PATCH) & static_cast<unsigned int>(methods);
 }
 
-bool HasOptionsFlag(METHODS methods) {
+bool HasOptionsFlag(METHODS methods)
+{
   return static_cast<unsigned int>(METHODS::OPTIONS) & static_cast<unsigned int>(methods);
 }
 
-
 void Router::InsertHandler(METHODS methods, HandlerHolder&& handler)
 {
-  if (HasGetFlag(methods) ) {
+  if (HasGetFlag(methods))
+  {
     method_map[METHODS::GET].InsertHandler(std::move(handler));
   }
 
-  if (HasPostFlag(methods) ) {
+  if (HasPostFlag(methods))
+  {
     method_map[METHODS::POST].InsertHandler(std::move(handler));
   }
 
-  if (HasPutFlag(methods) ) {
+  if (HasPutFlag(methods))
+  {
     method_map[METHODS::PUT].InsertHandler(std::move(handler));
   }
 
-  if (HasDeleteFlag(methods) ) {
+  if (HasDeleteFlag(methods))
+  {
     method_map[METHODS::DELETE].InsertHandler(std::move(handler));
   }
 
-  if (HasPatchFlag(methods) ) {
+  if (HasPatchFlag(methods))
+  {
     method_map[METHODS::PATCH].InsertHandler(std::move(handler));
   }
 
-  if (HasOptionsFlag(methods)) {
+  if (HasOptionsFlag(methods))
+  {
     method_map[METHODS::OPTIONS].InsertHandler(std::move(handler));
   }
 }
