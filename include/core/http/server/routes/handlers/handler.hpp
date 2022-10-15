@@ -9,7 +9,7 @@ namespace http
 namespace server
 {
 
-struct HandlerBase
+struct HandlerBase : private boost::noncopyable
 {
   [[nodiscard]] virtual bool CanHandle(std::string_view) const = 0;
   [[nodiscard]] virtual boost::asio::awaitable<http::Response> Handle(const http::Request&) const = 0;

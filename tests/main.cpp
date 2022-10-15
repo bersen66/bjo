@@ -73,7 +73,6 @@ public:
 
 
 
-
 int main(int argc, char** argv)
 {
 
@@ -87,7 +86,7 @@ int main(int argc, char** argv)
   http::server::Server server(http::server::DefaultConfig());
 
   server.RegisterHandlers()
-      (http::METHODS::GET, std::make_unique<Handler>())
+      (http::METHODS::GET | http::METHODS::POST, std::make_unique<Handler>())
       (http::METHODS::GET, std::make_unique<HandlerTwo>())
       (http::METHODS::GET, std::make_unique<HandleFavicon>())
   ;

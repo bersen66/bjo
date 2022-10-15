@@ -19,7 +19,6 @@ add_library(
      src/core/listener.cpp
      src/core/parsing_stuff.cpp
      src/core/router.cpp
-     src/core/run_server.cpp
      src/core/run_session.cpp
      src/core/server.cpp
      src/core/messages.cpp
