@@ -12,7 +12,7 @@ include_directories(include)
 #Add app-sources there
 add_library(
     ${PROJECT_NAME}
-
+    src/core/task_processor.cpp
      src/core/config.cpp
      src/core/connection.cpp
      src/core/handlers_map.cpp
@@ -22,23 +22,22 @@ add_library(
      src/core/run_session.cpp
      src/core/server.cpp
      src/core/messages.cpp
-     src/core/executor.cpp
 )
 
 
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
-option(ENABLE_TESTING "Enable testing" OFF)
+#option(ENABLE_TESTING "Enable testing" OFF)
 option(ENABLE_EXAMPLES "Enable examples" ON)
-option(ENABLE_BENCHMARKS "Enable benchmarks" OFF)
+#option(ENABLE_BENCHMARKS "Enable benchmarks" OFF)
 
 
-if (NOT ENABLE_TESTING)
-    message(STATUS "Testing disabled")
-elseif (IS_SUBPROJECT)
-    message(STATUS "Do not build tests for subproject")
-else ()
-    add_subdirectory(tests)
-endif ()
+#if (NOT ENABLE_TESTING)
+#    message(STATUS "Testing disabled")
+#elseif (IS_SUBPROJECT)
+#    message(STATUS "Do not build tests for subproject")
+#else ()
+#    add_subdirectory(tests)
+#endif ()
 
 
 if (NOT ENABLE_EXAMPLES)
@@ -49,13 +48,13 @@ else ()
     add_subdirectory(examples)
 endif ()
 
-if (NOT ENABLE_BENCHMARKS)
-    message(STATUS "Benchmarks disabled")
-elseif (IS_SUBPROJECT)
-    message(STATUS "Do not build benchmarks for subproject")
-else ()
-    add_subdirectory(benchmarks)
-endif ()
+#if (NOT ENABLE_BENCHMARKS)
+#    message(STATUS "Benchmarks disabled")
+#elseif (IS_SUBPROJECT)
+#    message(STATUS "Do not build benchmarks for subproject")
+#else ()
+#    add_subdirectory(benchmarks)
+#endif ()
 
 find_package(fmt REQUIRED)
 if (fmt_FOUND)

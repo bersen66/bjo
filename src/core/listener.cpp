@@ -26,7 +26,10 @@ namespace server
 
 Listener::Listener(boost::asio::io_context& ioc, const boost::asio::ip::tcp::endpoint& ep, const ConfigPtr& config,
                    const RouterPtr& router)
-    : ioc_(ioc), acceptor_(boost::asio::make_strand(ioc_), ep), config(config), routes(router)
+    : ioc_(ioc)
+    , acceptor_(boost::asio::make_strand(ioc_), ep)
+    , config(config)
+    , routes(router)
 {
   spdlog::info("Construct http::Listener");
 }

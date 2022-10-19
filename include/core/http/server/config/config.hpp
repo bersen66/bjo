@@ -17,7 +17,7 @@ struct Config : boost::noncopyable
   std::filesystem::path info_logfile = "info.log";
   std::string connection_string;
   short unsigned int listen_port = 8080;
-  unsigned int threads = 1;
+  unsigned int threads = 3;
   unsigned int connection_timeout = 2; // in seconds
   unsigned int request_timeout = 3;    // in seconds
 };

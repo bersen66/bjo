@@ -12,7 +12,9 @@ namespace http
 {
 
 Connection::Connection(boost::asio::ip::tcp::socket&& socket, unsigned int timeout)
-    : stream_(std::move(socket)), is_alive_(true), timeout_(timeout)
+    : stream_(std::move(socket))
+    , is_alive_(true)
+    , timeout_(timeout)
 {
   stream_.expires_after(std::chrono::seconds(timeout_));
   spdlog::info("Connection opened");
@@ -62,7 +64,7 @@ boost::asio::awaitable<std::optional<ConnectionPtr>> ConnectTo(std::string&& url
 
 boost::asio::awaitable<std::optional<ConnectionPtr>> ConnectTo(std::string_view url)
 {
-  auto executor = co_await boost::asio::this_coro::executor;
+  auto res = co_await ConnectTo(std::string(url.begin(), url.end()));
 }
 
 } // namespace http

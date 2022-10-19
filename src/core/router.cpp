@@ -5,7 +5,8 @@ namespace http
 namespace server
 {
 
-Router::RouterEasyInit::RouterEasyInit(Router* router_ptr) : router_ptr(router_ptr)
+Router::RouterEasyInit::RouterEasyInit(Router* router_ptr)
+    : router_ptr(router_ptr)
 {
 }
 

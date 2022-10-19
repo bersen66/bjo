@@ -1,12 +1,12 @@
-#include <core/executors/executor.hpp>
+#include "core/task_processor.hpp"
 
-Executor::Executor(int thread_num)
-    : ioc_(std::max(thread_num, 1)),
-      thread_num_(std::max(thread_num, 1))
+TaskProcessor::TaskProcessor(int thread_num)
+    : ioc_(std::max(thread_num, 1))
+    , thread_num_(std::max(thread_num, 1))
 {
 }
 
-void Executor::Run()
+void TaskProcessor::Start()
 {
   auto& ioc = GetIOService();
   for (int i = 0; i < thread_num_; i++)
@@ -18,12 +18,12 @@ void Executor::Run()
   }
 }
 
-void Executor::Join()
+void TaskProcessor::Join()
 {
   thread_pool_.join_all();
 }
 
-boost::asio::io_context& Executor::GetIOService()
+boost::asio::io_context& TaskProcessor::GetIOService()
 {
   return ioc_;
 }

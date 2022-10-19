@@ -3,6 +3,9 @@ Language: Cpp
 BasedOnStyle: Microsoft
 
 ReferenceAlignment: Left
+BreakInheritanceList: BeforeComma
+AllowAllArgumentsOnNextLine: true
+BreakConstructorInitializers: BeforeComma
 DerivePointerAlignment: false
 IndentAccessModifiers: false
 AccessModifierOffset: -2

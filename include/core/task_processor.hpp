@@ -4,21 +4,21 @@
 #include <boost/noncopyable.hpp>
 #include <boost/thread.hpp>
 
-class Executor : private boost::noncopyable
+class TaskProcessor : private boost::noncopyable
 {
 public:
   using WorkGuard = boost::asio::executor_work_guard<boost::asio::io_context::executor_type>;
 
-  explicit Executor(int thread_num = 1);
+  explicit TaskProcessor(int thread_num = 1);
 
-  void Run();
+  void Start();
 
   void Join();
 
   boost::asio::io_context& GetIOService();
 
   template <typename Task, typename CompletionToken>
-  auto Execute(const Task& task, CompletionToken&& completion_token)
+  auto ProcessTask(const Task& task, CompletionToken&& completion_token)
       -> decltype(boost::asio::co_spawn(boost::asio::make_strand(GetIOService()), task(),
                                         std::forward<CompletionToken>(completion_token)))
   {

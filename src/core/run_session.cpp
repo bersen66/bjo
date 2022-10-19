@@ -34,35 +34,43 @@ std::string GetRoute(const Request& req)
   return {target.begin(), target.end()};
 }
 
+size_t GetThreadID()
+{
+  return std::hash<std::thread::id>{}(std::this_thread::get_id());
+}
+
 boost::asio::awaitable<void> RunSession(boost::asio::ip::tcp::socket client_socket, const ConfigPtr& config,
                                         const RouterPtr& routes)
 {
+
   Connection conn(std::move(client_socket), config->connection_timeout);
   const auto& router_map = *routes;
-  for (; conn.IsAlive();)
+
+  try
   {
-    auto optional_req = co_await conn.FetchRequest();
-
-    if (!optional_req.has_value())
+    for (; conn.IsAlive();)
     {
-      break;
-    }
+      auto optional_req = co_await conn.FetchRequest();
 
-    auto& request = optional_req.value();
+      if (!optional_req.has_value())
+      {
+        break;
+      }
 
-    spdlog::info("Fetched request!\n{}\n", request);
-    try
-    {
+      auto& request = optional_req.value();
+
+      spdlog::info("In thread: {}. Fetched request!\n{}\n", GetThreadID(), request);
+
       const auto& handler = router_map[GetMethod(request)][GetRoute(request)];
       Response res = co_await handler->Handle(request);
-      spdlog::info("Generated response:\n {}\n", res);
+      spdlog::info("In thread: {}. Generated response:\n {}\n", GetThreadID(), res);
       co_await conn.SendResponse(std::move(res));
     }
-    catch (const std::exception& exc)
-    {
-      spdlog::error("Bad request! Message: {}\n", exc.what());
-      conn.Disconnect();
-    }
+  }
+  catch (const std::exception& exc)
+  {
+    spdlog::error("In thread: {}. Bad request! Message: {}\n", GetThreadID(), exc.what());
+    conn.Disconnect();
   }
 }
 

@@ -12,7 +12,7 @@
 #include <unordered_map>
 
 #include "core/http/server/config/config.hpp"
-#include "core/parsing_stuff/parsing_stuff.hpp"
+#include "core/parsing_stuff.hpp"
 
 namespace http
 {
@@ -160,7 +160,6 @@ std::optional<ConfigPtr> ConstructConfigFromYaml(YAML::Node&& doc)
   }
 
   return res;
-
 }
 
 std::optional<ConfigPtr> GetConfigFromYaml(const std::filesystem::path& path_to_config)

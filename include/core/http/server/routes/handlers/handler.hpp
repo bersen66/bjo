@@ -2,7 +2,7 @@
 
 #include <boost/asio.hpp>
 
-#include "core/http/messages/messages.hpp"
+#include "core/http/messages.hpp"
 
 namespace http
 {

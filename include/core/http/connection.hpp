@@ -5,7 +5,8 @@
 #include <memory>
 #include <optional>
 
-#include "core/http/messages/messages.hpp"
+#include "messages.hpp"
+#include <spdlog/spdlog.h>
 
 namespace http
 {
@@ -20,28 +21,28 @@ public:
   ~Connection();
 
   template <typename Body = boost::beast::http::string_body, typename Fields = boost::beast::http::fields>
-  boost::asio::awaitable<std::optional<boost::beast::http::request<Body, Fields>>> FetchRequest()
+  auto FetchRequest() -> boost::asio::awaitable<std::optional<boost::beast::http::request<Body, Fields>>>
   {
     auto res = co_await FetchMessage<MESSAGE::REQUEST, Body, Fields>();
     co_return res;
   }
 
   template <typename Body = boost::beast::http::string_body, typename Fields = boost::beast::http::fields>
-  boost::asio::awaitable<std::optional<boost::beast::http::response<Body, Fields>>> FetchResponse()
+  auto FetchResponse() -> boost::asio::awaitable<std::optional<boost::beast::http::response<Body, Fields>>>
   {
     auto res = co_await FetchMessage<MESSAGE::RESPONSE, Body, Fields>();
     co_return res;
   }
 
   template <typename Body = boost::beast::http::string_body, typename Fields = boost::beast::http::fields>
-  boost::asio::awaitable<size_t> SendRequest(boost::beast::http::request<Body, Fields>&& request)
+  auto SendRequest(boost::beast::http::request<Body, Fields>&& request) -> boost::asio::awaitable<size_t>
   {
     auto res = co_await SendMessage<MESSAGE::REQUEST, Body, Fields>(std::move(request));
     co_return res;
   }
 
   template <typename Body = boost::beast::http::string_body, typename Fields = boost::beast::http::fields>
-  boost::asio::awaitable<size_t> SendResponse(boost::beast::http::response<Body, Fields>&& response)
+  auto SendResponse(boost::beast::http::response<Body, Fields>&& response) -> boost::asio::awaitable<size_t>
   {
     auto res = co_await SendMessage<MESSAGE::RESPONSE, Body, Fields>(std::move(response));
     co_return res;
@@ -54,8 +55,9 @@ public:
 private:
   template <MESSAGE MessageType, typename Body = boost::beast::http::string_body,
             typename Fields = boost::beast::http::fields>
-  boost::asio::awaitable<std::optional<boost::beast::http::message<static_cast<bool>(MessageType), Body, Fields>>>
-  FetchMessage()
+  auto FetchMessage() -> boost::asio::awaitable<
+      std::optional<boost::beast::http::message<static_cast<bool>(MessageType), Body, Fields>>>
+
   {
     if (!IsAlive())
     {
