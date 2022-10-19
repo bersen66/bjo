@@ -22,12 +22,14 @@ add_library(
      src/core/run_session.cpp
      src/core/server.cpp
      src/core/messages.cpp
+     src/core/executor.cpp
 )
 
 
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
-option(ENABLE_TESTING "Enable testing" ON)
-option(ENABLE_BENCHMARKS "Enable benchmarks" ON)
+option(ENABLE_TESTING "Enable testing" OFF)
+option(ENABLE_EXAMPLES "Enable examples" ON)
+option(ENABLE_BENCHMARKS "Enable benchmarks" OFF)
 
 
 if (NOT ENABLE_TESTING)
@@ -38,6 +40,14 @@ else ()
     add_subdirectory(tests)
 endif ()
 
+
+if (NOT ENABLE_EXAMPLES)
+    message(STATUS "examples disabled")
+elseif (IS_SUBPROJECT)
+    message(STATUS "Do not build examples for subproject")
+else ()
+    add_subdirectory(examples)
+endif ()
 
 if (NOT ENABLE_BENCHMARKS)
     message(STATUS "Benchmarks disabled")
