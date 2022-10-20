@@ -12,13 +12,16 @@
 #define SPDLOG_FMT_EXTERNAL
 #include <spdlog/spdlog.h>
 
-#include "core/http/server/config/config.hpp"
+#include "core/http/server/config.hpp"
 #include "core/http/server/listener.hpp"
 #include "core/http/server/session/session.hpp"
 
 using boost::asio::awaitable;
 using boost::asio::make_strand;
 
+
+namespace core
+{
 namespace http
 {
 namespace server
@@ -61,3 +64,4 @@ boost::asio::awaitable<void> Listener::Listen()
 
 } // namespace server
 } // namespace http
+} // namespace core

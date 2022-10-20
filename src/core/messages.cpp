@@ -1,5 +1,6 @@
 #include "core/http/messages.hpp"
-
+namespace core
+{
 namespace http
 {
 
@@ -9,3 +10,4 @@ METHODS operator|(const METHODS& lhs, const METHODS& rhs)
 }
 
 } // namespace http
+} // namespace core

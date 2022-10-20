@@ -7,7 +7,8 @@
 #include <memory>
 
 #include "core/http/connection.hpp"
-
+namespace core
+{
 namespace http
 {
 
@@ -35,7 +36,7 @@ void Connection::Disconnect()
   is_alive_ = false;
 }
 
-boost::asio::awaitable<std::optional<ConnectionPtr>> ConnectTo(const std::string& url)
+auto ConnectTo(const std::string& url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>
 {
   auto executor = co_await boost::asio::this_coro::executor;
   boost::asio::ip::tcp::resolver resolver(executor);
@@ -56,15 +57,16 @@ boost::asio::awaitable<std::optional<ConnectionPtr>> ConnectTo(const std::string
   }
 }
 
-boost::asio::awaitable<std::optional<ConnectionPtr>> ConnectTo(std::string&& url)
+auto ConnectTo(std::string&& url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>
 {
   auto res = co_await ConnectTo(url);
   co_return res;
 }
 
-boost::asio::awaitable<std::optional<ConnectionPtr>> ConnectTo(std::string_view url)
+auto ConnectTo(std::string_view url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>
 {
   auto res = co_await ConnectTo(std::string(url.begin(), url.end()));
 }
 
 } // namespace http
+} // namespace core

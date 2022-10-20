@@ -1,9 +1,12 @@
 #pragma once
 
 #include <boost/asio.hpp>
+#include <boost/noncopyable.hpp>
 
 #include "core/http/messages.hpp"
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -20,3 +23,4 @@ using HandlerHolder = std::unique_ptr<HandlerBase>;
 
 } // namespace server
 } // namespace http
+} // namespace core

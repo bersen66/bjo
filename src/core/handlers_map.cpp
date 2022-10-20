@@ -5,6 +5,8 @@
 
 #include "core/http/server/routes/handlers/handlers.hpp"
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -46,3 +48,4 @@ const HandlerHolder& HandlersMap::GetHandler(std::string_view route) const
 
 } // namespace server
 } // namespace http
+} // namespace core

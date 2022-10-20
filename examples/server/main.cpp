@@ -8,9 +8,12 @@
 #include <boost/stacktrace.hpp>
 
 #include "boost/asio.hpp"
-#include "core/http/server.hpp"
+#include "core/http.hpp"
 
 #include <ctre.hpp>
+
+
+using namespace core;
 
 void SoftQuit(int signal) {
     spdlog::info("Closed by signal: {}\n", signal);
@@ -26,7 +29,7 @@ class Handler : public http::server::HandlerBase {
 public:
     static constexpr ctll::fixed_string route = "/First/[0-9a-z]+";
 
-    bool CanHandle(std::string_view url) const override {
+    [[nodiscard]] bool CanHandle(std::string_view url) const override {
         return ctre::match<route>(url);
     }
 
@@ -42,7 +45,7 @@ class HandlerTwo : public http::server::HandlerBase {
 public:
     static constexpr ctll::fixed_string route = "/Second/[0-9a-z]+";
 
-    bool CanHandle(std::string_view url) const override {
+    [[nodiscard]] bool CanHandle(std::string_view url) const override {
         return ctre::match<route>(url);
     }
 
@@ -58,7 +61,7 @@ class HandleFavicon : public http::server::HandlerBase {
 public:
     static constexpr ctll::fixed_string route = "/favicon.ico";
 
-    bool CanHandle(std::string_view url) const override {
+    [[nodiscard]] bool CanHandle(std::string_view url) const override {
         return ctre::match<route>(url);
     }
 
@@ -80,12 +83,10 @@ int main(int argc, char **argv) {
     std::signal(SIGSEGV, HandleSIGSEGV); // Smth bad in memory
 
     http::server::Server server(http::server::DefaultConfig());
-
     server.RegisterHandlers()
             (http::METHODS::GET | http::METHODS::POST, std::make_unique<Handler>())
             (http::METHODS::GET, std::make_unique<HandlerTwo>())
             (http::METHODS::GET, std::make_unique<HandleFavicon>());
-
     server.Serve();
 
     return 0;

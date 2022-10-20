@@ -2,6 +2,8 @@
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -50,3 +52,5 @@ void Server::Serve()
 
 } // namespace server
 } // namespace http
+
+} // namespace core

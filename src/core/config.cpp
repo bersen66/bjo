@@ -11,9 +11,11 @@
 #include <optional>
 #include <unordered_map>
 
-#include "core/http/server/config/config.hpp"
+#include "core/http/server/config.hpp"
 #include "core/parsing_stuff.hpp"
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -111,11 +113,6 @@ std::optional<ConfigPtr> GetConfigFromJson(const std::filesystem::path& path_to_
   }
 }
 
-YAML::Node ParseYaml(const std::filesystem::path& path_to_config)
-{
-  return YAML::LoadFile(path_to_config);
-}
-
 std::optional<ConfigPtr> ConstructConfigFromYaml(YAML::Node&& doc)
 {
   if (doc.IsNull())
@@ -166,7 +163,7 @@ std::optional<ConfigPtr> GetConfigFromYaml(const std::filesystem::path& path_to_
 {
   try
   {
-    std::optional<ConfigPtr> result = ConstructConfigFromYaml(std::move(ParseYaml(path_to_config)));
+    std::optional<ConfigPtr> result = ConstructConfigFromYaml(std::move(parsers::ParseYaml(path_to_config)));
     return result;
   }
   catch (const std::exception& exc)
@@ -236,3 +233,4 @@ std::ostream& operator<<(std::ostream& os, const ConfigPtr& config_ptr)
 
 } // namespace server
 } // namespace http
+} // namespace core

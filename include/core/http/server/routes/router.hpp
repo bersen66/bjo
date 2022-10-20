@@ -6,6 +6,8 @@
 
 #include "core/http/server/routes/handlers/handlers_map.hpp"
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -45,3 +47,4 @@ RouterPtr EmptyRouter();
 
 } // namespace server
 } // namespace http
+} // namespace core

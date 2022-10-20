@@ -8,6 +8,8 @@
 
 #include "core/http/server/routes/handlers/handlers.hpp"
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -33,3 +35,6 @@ private:
 
 } // namespace server
 } // namespace http
+} // namespace core
+
+

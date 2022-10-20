@@ -6,7 +6,11 @@
 #include <string_view>
 #include <vector>
 #include <json/json.h>
+#include <yaml-cpp/yaml.h>
 
+
+namespace core
+{
 namespace parsers
 {
 
@@ -31,4 +35,8 @@ double NextDouble(std::string_view& s, std::string_view delimeter = " ");
 
 Json::Value ParseJson(const std::filesystem::path& path);
 
+YAML::Node ParseYaml(const std::filesystem::path& path_to_config);
+
+
 } // namespace parsers
+} // namespace core

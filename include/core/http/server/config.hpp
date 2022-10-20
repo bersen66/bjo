@@ -6,6 +6,8 @@
 #include <optional>   // for std::optional
 #include <unordered_map>
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -33,3 +35,4 @@ std::optional<ConfigPtr> ParseConfigFile(const std::filesystem::path& config_fil
 
 } // namespace server
 } // namespace http
+} // namespace core

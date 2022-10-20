@@ -1,10 +1,12 @@
 #pragma once
 
-#include "core/http/server/config/config.hpp"
+#include "core/http/server/config.hpp"
 #include "core/http/server/listener.hpp"
 #include "core/http/server/routes/routes.hpp"
 #include "core/http/server/session/session.hpp"
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -29,3 +31,6 @@ private:
 
 } // namespace server
 } // namespace http
+} // namespace core
+
+

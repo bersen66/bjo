@@ -2,9 +2,11 @@
 #include <boost/asio.hpp>
 #include <boost/noncopyable.hpp>
 
-#include "core/http/server/config/config.hpp"
+#include "config.hpp"
 #include "core/http/server/routes/router.hpp"
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -28,3 +30,6 @@ private:
 
 } // namespace server
 } // namespace http
+} // namespace core
+
+

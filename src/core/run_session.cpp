@@ -8,9 +8,11 @@
 #include <spdlog/spdlog.h>
 
 #include "core/http/connection.hpp"
-#include "core/http/server/config/config.hpp"
+#include "core/http/server/config.hpp"
 #include "core/http/server/session/session.hpp"
 
+namespace core
+{
 namespace http
 {
 namespace server
@@ -76,3 +78,4 @@ boost::asio::awaitable<void> RunSession(boost::asio::ip::tcp::socket client_sock
 
 } // namespace server
 } // namespace http
+} // namespace core

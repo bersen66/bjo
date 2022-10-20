@@ -5,9 +5,11 @@
 #include <memory>
 #include <optional>
 
-#include "messages.hpp"
+#include "core/http/messages.hpp"
 #include <spdlog/spdlog.h>
 
+namespace core
+{
 namespace http
 {
 
@@ -23,29 +25,25 @@ public:
   template <typename Body = boost::beast::http::string_body, typename Fields = boost::beast::http::fields>
   auto FetchRequest() -> boost::asio::awaitable<std::optional<boost::beast::http::request<Body, Fields>>>
   {
-    auto res = co_await FetchMessage<MESSAGE::REQUEST, Body, Fields>();
-    co_return res;
+    co_return co_await FetchMessage<MESSAGE::REQUEST, Body, Fields>();
   }
 
   template <typename Body = boost::beast::http::string_body, typename Fields = boost::beast::http::fields>
   auto FetchResponse() -> boost::asio::awaitable<std::optional<boost::beast::http::response<Body, Fields>>>
   {
-    auto res = co_await FetchMessage<MESSAGE::RESPONSE, Body, Fields>();
-    co_return res;
+    co_return co_await FetchMessage<MESSAGE::RESPONSE, Body, Fields>();
   }
 
   template <typename Body = boost::beast::http::string_body, typename Fields = boost::beast::http::fields>
   auto SendRequest(boost::beast::http::request<Body, Fields>&& request) -> boost::asio::awaitable<size_t>
   {
-    auto res = co_await SendMessage<MESSAGE::REQUEST, Body, Fields>(std::move(request));
-    co_return res;
+    co_return co_await SendMessage<MESSAGE::REQUEST, Body, Fields>(std::move(request));
   }
 
   template <typename Body = boost::beast::http::string_body, typename Fields = boost::beast::http::fields>
   auto SendResponse(boost::beast::http::response<Body, Fields>&& response) -> boost::asio::awaitable<size_t>
   {
-    auto res = co_await SendMessage<MESSAGE::RESPONSE, Body, Fields>(std::move(response));
-    co_return res;
+    co_return co_await SendMessage<MESSAGE::RESPONSE, Body, Fields>(std::move(response));
   }
 
   [[nodiscard]] bool IsAlive() const;
@@ -81,8 +79,8 @@ private:
 
   template <MESSAGE MessageType, typename Body = boost::beast::http::string_body,
             typename Fields = boost::beast::http::fields>
-  boost::asio::awaitable<size_t> SendMessage(
-      boost::beast::http::message<static_cast<bool>(MessageType), Body, Fields>&& message)
+  auto SendMessage(boost::beast::http::message<static_cast<bool>(MessageType), Body, Fields>&& message)
+      -> boost::asio::awaitable<size_t>
   {
     if (!IsAlive())
     {
@@ -102,10 +100,11 @@ private:
 
 using ConnectionPtr = std::unique_ptr<Connection>;
 
-boost::asio::awaitable<std::optional<ConnectionPtr>> ConnectTo(const std::string& url);
+auto ConnectTo(const std::string& url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>;
 
-boost::asio::awaitable<std::optional<ConnectionPtr>> ConnectTo(std::string&& url);
+auto ConnectTo(std::string&& url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>;
 
-boost::asio::awaitable<std::optional<ConnectionPtr>> ConnectTo(std::string_view url);
+auto ConnectTo(std::string_view url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>;
 
 } // namespace http
+} // namespace core

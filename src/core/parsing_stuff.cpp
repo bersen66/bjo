@@ -7,9 +7,11 @@
 #include <string>
 #include <string_view>
 #include <vector>
-
+#include <yaml-cpp/yaml.h>
 #include <json/json.h>
 
+namespace core
+{
 namespace parsers
 {
 
@@ -116,4 +118,11 @@ Json::Value ParseJson(const std::filesystem::path& path)
   return result;
 }
 
+YAML::Node ParseYaml(const std::filesystem::path& path_to_config)
+{
+  return YAML::LoadFile(path_to_config);
+}
+
+
 } // namespace parsers
+} // namespace core

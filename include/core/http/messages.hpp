@@ -1,6 +1,9 @@
 #pragma once
 #include <boost/beast.hpp>
 
+
+namespace core
+{
 namespace http
 {
 
@@ -27,3 +30,5 @@ using Request = boost::beast::http::request<boost::beast::http::string_body>;
 using Response = boost::beast::http::response<boost::beast::http::string_body>;
 
 } // namespace http
+} // namespace core
+
