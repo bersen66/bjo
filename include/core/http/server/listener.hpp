@@ -4,6 +4,7 @@
 
 #include "config.hpp"
 #include "core/http/server/routes/router.hpp"
+#include "core/task_processor.hpp"
 
 namespace core
 {
@@ -15,17 +16,22 @@ namespace server
 class Listener : private boost::noncopyable
 {
 public:
-  Listener(boost::asio::io_context& ioc, const boost::asio::ip::tcp::endpoint& ep,
+  Listener(const boost::asio::ip::tcp::endpoint& ep,
+           TaskProcessor& session_processor,
            const ConfigPtr& config = DefaultConfig(), const RouterPtr& router = EmptyRouter());
 
   ~Listener();
-  boost::asio::awaitable<void> Listen();
+
+  void StartListening();
 
 private:
-  boost::asio::io_context& ioc_;
+  boost::asio::awaitable<void> Listen();
+private:
+  TaskProcessor accept_prcocessor_; // where we're accepting new connections
+  TaskProcessor& session_processor_; // push sessions there
   boost::asio::ip::tcp::acceptor acceptor_;
-  RouterPtr routes;
-  ConfigPtr config;
+  RouterPtr router_ptr_;
+  ConfigPtr config_ptr_;
 };
 
 } // namespace server

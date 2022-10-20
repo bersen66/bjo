@@ -16,10 +16,6 @@
 #include "core/http/server/listener.hpp"
 #include "core/http/server/session/session.hpp"
 
-using boost::asio::awaitable;
-using boost::asio::make_strand;
-
-
 namespace core
 {
 namespace http
@@ -27,12 +23,13 @@ namespace http
 namespace server
 {
 
-Listener::Listener(boost::asio::io_context& ioc, const boost::asio::ip::tcp::endpoint& ep, const ConfigPtr& config,
+Listener::Listener(const boost::asio::ip::tcp::endpoint& ep, TaskProcessor& session_processor, const ConfigPtr& config,
                    const RouterPtr& router)
-    : ioc_(ioc)
-    , acceptor_(boost::asio::make_strand(ioc_), ep)
-    , config(config)
-    , routes(router)
+    : accept_prcocessor_(1)
+    , session_processor_(session_processor)
+    , acceptor_(accept_prcocessor_.GetIOContext(), ep)
+    , config_ptr_(config)
+    , router_ptr_(router)
 {
   spdlog::info("Construct http::Listener");
 }
@@ -40,6 +37,12 @@ Listener::Listener(boost::asio::io_context& ioc, const boost::asio::ip::tcp::end
 Listener::~Listener()
 {
   spdlog::info("http::Listener destructed!");
+}
+
+void Listener::StartListening()
+{
+  accept_prcocessor_.ProcessTask(Listen(), boost::asio::detached);
+  accept_prcocessor_.Start<TaskProcessor::START_MODE::USE_THIS_THREAD>();
 }
 
 boost::asio::awaitable<void> Listener::Listen()
@@ -50,11 +53,13 @@ boost::asio::awaitable<void> Listener::Listen()
     try
     {
       auto client_socket = co_await acceptor_.async_accept(boost::asio::use_awaitable);
-      boost::asio::co_spawn(boost::asio::make_strand(ioc_), RunSession(std::move(client_socket), config, routes),
-                            boost::asio::detached);
+      session_processor_.ProcessTask(RunSession(std::move(client_socket), config_ptr_, router_ptr_),
+                                     boost::asio::detached);
     }
     catch (const std::exception& exc)
     {
+
+      // make async
       spdlog::error("\nException while http listening:\nException message: "
                     "{}\nStacktrace: {}\n",
                     exc.what(), boost::stacktrace::stacktrace());

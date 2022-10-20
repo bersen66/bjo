@@ -8,18 +8,6 @@ TaskProcessor::TaskProcessor(int task_in_the_same_time)
 {
 }
 
-void TaskProcessor::Start()
-{
-  auto& ioc = GetIOContext();
-  for (int i = 0; i < thread_num_; i++)
-  {
-    thread_pool_.create_thread([&ioc]() {
-      WorkGuard guard(ioc.get_executor()); // Prevents finishing of event-loop
-      ioc.run();
-    });
-  }
-}
-
 void TaskProcessor::Join()
 {
   thread_pool_.join_all();
@@ -29,4 +17,5 @@ boost::asio::io_context& TaskProcessor::GetIOContext()
 {
   return ioc_;
 }
+
 } // namespace core

@@ -12,7 +12,7 @@ ehthumbs_vista.db
 # Dump file
 *.stackdump
 
-# Folder config file
+# Folder config_ptr_ file
 [Dd]esktop.ini
 
 # Recycle Bin used on file shares
@@ -321,8 +321,8 @@ flycheck_*.el
 # *.sublime-project
 
 # SFTP configuration file
-sftp-config.json
-sftp-config-alt*.json
+sftp-config_ptr_.json
+sftp-config_ptr_-alt*.json
 
 # Package control specific files
 Package Control.last-run
@@ -761,7 +761,7 @@ PublishScripts/
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
-#!**/[Pp]ackages/repositories.config
+#!**/[Pp]ackages/repositories.config_ptr_
 # NuGet v3's project.json files produces more ignorable files
 *.nuget.props
 *.nuget.targets
@@ -878,7 +878,7 @@ __pycache__/
 
 # Cake - Uncomment if you are using it
 # tools/**
-# !tools/packages.config
+# !tools/packages.config_ptr_
 
 # Tabs Studio
 *.tss
@@ -927,7 +927,7 @@ FodyWeavers.xsd
 **/build/
 !src/**/build/
 
-# Ignore Gradle GUI config
+# Ignore Gradle GUI config_ptr_
 gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)

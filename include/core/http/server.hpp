@@ -4,6 +4,7 @@
 #include "core/http/server/listener.hpp"
 #include "core/http/server/routes/routes.hpp"
 #include "core/http/server/session/session.hpp"
+#include "core/task_processor.hpp"
 
 namespace core
 {
@@ -23,7 +24,8 @@ public:
   void Serve();
 
 private:
-  boost::asio::io_context io_context_;
+  //boost::asio::io_context io_context_;
+  TaskProcessor session_processor_;
   Listener listener_;
   RouterPtr router_ptr_;
   ConfigPtr config_ptr_;
