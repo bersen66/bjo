@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(${PROJECT_NAME}_SERVER_EXAMPLE)
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} core)
+target_link_libraries(${PROJECT_NAME} bjo)
 
 find_package(Boost REQUIRED)
 if (Boost_FOUND)

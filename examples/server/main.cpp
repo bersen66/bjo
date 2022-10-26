@@ -9,11 +9,12 @@
 #include <boost/stacktrace.hpp>
 
 #include "boost/asio.hpp"
-#include "core/http.hpp"
+
+#include "bjo/http.hpp"
 
 #include <ctre.hpp>
 
-using namespace core;
+using namespace bjo;
 
 void SoftQuit(int signal)
 {
@@ -27,6 +28,12 @@ void HandleSIGSEGV(int signal)
   std::exit(EXIT_FAILURE);
 }
 
+size_t GetThreadID()
+{
+  return std::hash<std::thread::id>{}(std::this_thread::get_id());
+}
+
+
 class Handler : public http::server::HandlerBase
 {
 public:
@@ -37,8 +44,9 @@ public:
     return ctre::match<route>(url);
   }
 
-  boost::asio::awaitable<http::Response> Handle(const http::Request&) const override
+  boost::asio::awaitable<http::Response> Handle(const http::Request& request) const override
   {
+    spdlog::info("Handling {} in thread {}", request.target(),  GetThreadID());
     http::Response result = {};
     result.body() = "<h1>First<\h1>";
     result.prepare_payload();
@@ -46,20 +54,21 @@ public:
   }
 };
 
+
 class HandlerTwo : public http::server::HandlerBase
 {
 public:
   static constexpr ctll::fixed_string route = "/Second/[0-9a-z]+";
 
-  [[nodiscard]] bool CanHandle(std::string_view url) const override
+  bool CanHandle(std::string_view target) const override
   {
-    return ctre::match<route>(url);
+    return ctre::match<route>(target);
   }
 
   boost::asio::awaitable<http::Response> Handle(const http::Request&) const override
   {
     http::Response result = {};
-    result.body() = "<h1>Second<\h1>";
+    /***/
     result.prepare_payload();
     co_return result;
   }
@@ -70,9 +79,9 @@ class HandleFavicon : public http::server::HandlerBase
 public:
   static constexpr ctll::fixed_string route = "/favicon.ico";
 
-  [[nodiscard]] bool CanHandle(std::string_view url) const override
+  bool CanHandle(std::string_view target) const override
   {
-    return ctre::match<route>(url);
+    return ctre::match<route>(target);
   }
 
   boost::asio::awaitable<http::Response> Handle(const http::Request& req) const override
@@ -83,10 +92,10 @@ public:
   }
 };
 
+
 int main(int argc, char** argv)
 {
-
-
+  spdlog::set_pattern("[%H:%M:%S %z] [thread %t] %v");
   // Setting up handlers for default OS signals.
   std::signal(SIGINT, SoftQuit);  // Close by Ctrl + C
   std::signal(SIGQUIT, SoftQuit); // Close by Ctrl + \ or Ctrl + 4 or SysRq
@@ -94,10 +103,7 @@ int main(int argc, char** argv)
   std::signal(SIGTERM, SoftQuit);
   std::signal(SIGSEGV, HandleSIGSEGV); // Smth bad in memory
 
-
-
-
-  core::http::server::Server server(http::server::DefaultConfig());
+  bjo::http::server::Server server(http::server::DefaultConfig());
   server.RegisterHandlers()
       (http::METHODS::GET | http::METHODS::POST, std::make_unique<Handler>())
       (http::METHODS::GET, std::make_unique<HandlerTwo>())

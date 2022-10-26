@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(core VERSION 0.1 LANGUAGES CXX)
+project(bjo VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -12,16 +12,17 @@ include_directories(include)
 #Add app-sources there
 add_library(
     ${PROJECT_NAME}
-    src/core/task_processor.cpp
-     src/core/config.cpp
-     src/core/connection.cpp
-     src/core/handlers_map.cpp
-     src/core/listener.cpp
-     src/core/parsing_stuff.cpp
-     src/core/router.cpp
-     src/core/run_session.cpp
-     src/core/server.cpp
-     src/core/messages.cpp
+        src/bjo/task_processor.cpp
+        src/bjo/config.cpp
+        src/bjo/connection.cpp
+        src/bjo/handlers_map.cpp
+        src/bjo/listener.cpp
+        src/bjo/parsing_stuff.cpp
+        src/bjo/router.cpp
+        src/bjo/run_session.cpp
+        src/bjo/server.cpp
+        src/bjo/messages.cpp
+        src/bjo/logger_ptr.cpp
 )
 
 
