@@ -123,7 +123,7 @@ bjo предоставляет пользователю удобную и эфф
 #### ПРИМЕР ОБРАБОТЧИКА
 
 ```c++
-class Handler : public http::server::HandlerBase
+class Handler : public bjo::http::server::HandlerBase
 {
 public:
   // Паттерн подходящего таргета
