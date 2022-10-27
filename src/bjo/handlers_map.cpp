@@ -1,10 +1,11 @@
-#include "bjo/http/server/routes/handlers/handlers_map.hpp"
 
-#include <algorithm>
+
 #include <optional>
 
 #include "bjo/http/server/handler.hpp"
 #include "bjo/http/server/routes/handlers/handlers.hpp"
+#include "bjo/http/server/routes/handlers/handlers_map.hpp"
+#include "profile.hpp"
 
 namespace bjo
 {
@@ -15,6 +16,7 @@ namespace server
 
 const HandlerHolder& HandlersMap::operator[](std::string_view route) const
 {
+  //LOG_DURATION("GET HANDLER TIME");
   return GetHandler(route);
 }
 
@@ -32,6 +34,7 @@ bool HandlersMap::CanHandle(std::string_view route) const
 
 void HandlersMap::InsertHandler(HandlerHolder&& handler)
 {
+  //LOG_DURATION("INSERT HANDLER TIME");
   handlers_.emplace_back(std::move(handler));
 }
 

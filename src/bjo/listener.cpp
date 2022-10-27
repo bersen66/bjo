@@ -11,6 +11,7 @@
 #define SPDLOG_FMT_EXTERNAL
 #include <spdlog/spdlog.h>
 
+#include "profile.hpp"
 #include "bjo/http/server.hpp"
 #include "bjo/http/server/config.hpp"
 #include "bjo/http/server/listener.hpp"
@@ -50,10 +51,13 @@ void Listener::StartListening()
 
 boost::asio::awaitable<void> Listener::Listen()
 {
+
   if (infolog_ptr_)
     infolog_ptr_->info("Start accepting.");
+
   for (;;)
   {
+    //LOG_DURATION("Iteration time");
     try
     {
       if (infolog_ptr_)

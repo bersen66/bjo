@@ -23,6 +23,7 @@ add_library(
         src/bjo/server.cpp
         src/bjo/messages.cpp
         src/bjo/logger_ptr.cpp
+        src/profile.cpp
 )
 
 

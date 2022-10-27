@@ -14,29 +14,27 @@ namespace bjo
 {
 namespace http
 {
-namespace server
-{
 
 class Server
 {
-
 public:
-  explicit Server(const ConfigPtr& config = http::server::DefaultConfig(),
-                  const RouterPtr& router = http::server::EmptyRouter());
+  explicit Server(const server::ConfigPtr& config = http::server::DefaultConfig(),
+                  const server::RouterPtr& router = http::server::EmptyRouter());
 
-  Router::RouterEasyInit RegisterHandlers();
+  server::Router::RouterEasyInit RegisterHandlers();
 
   void Serve();
 
+
+
 private:
   TaskProcessor session_processor_;
-  Listener listener_;
-  RouterPtr router_ptr_;
-  ConfigPtr config_ptr_;
+  server::Listener listener_;
+  server::RouterPtr router_ptr_;
+  server::ConfigPtr config_ptr_;
   LoggerPtr info_log_;
   LoggerPtr error_log_;
 };
 
-} // namespace server
 } // namespace http
 } // namespace bjo

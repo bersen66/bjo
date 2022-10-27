@@ -5,10 +5,8 @@ namespace bjo
 {
 namespace http
 {
-namespace server
-{
 
-Server::Server(const ConfigPtr& config, const RouterPtr& router)
+Server::Server(const server::ConfigPtr& config, const server::RouterPtr& router)
     : session_processor_(static_cast<int>(config->threads))
     , config_ptr_(config)
     , router_ptr_(router)
@@ -21,7 +19,7 @@ Server::Server(const ConfigPtr& config, const RouterPtr& router)
   listener_.AttachInfoLogger(info_log_);
 }
 
-Router::RouterEasyInit Server::RegisterHandlers()
+server::Router::RouterEasyInit Server::RegisterHandlers()
 {
   return router_ptr_->RegisterHandlers();
 }
@@ -32,6 +30,6 @@ void Server::Serve()
   listener_.StartListening();
 }
 
-} // namespace server
+
 } // namespace http
 } // namespace bjo

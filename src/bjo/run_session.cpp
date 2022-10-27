@@ -14,6 +14,8 @@
 #include "bjo/http/server.hpp"
 #include "bjo/http/server/logger_ptr.hpp"
 
+#include "profile.hpp"
+
 
 
 namespace bjo
@@ -25,6 +27,7 @@ namespace server
 
 METHODS GetMethod(const Request& req)
 {
+  //LOG_DURATION("GET METHOD TIME");
   namespace bhttp = boost::beast::http;
   static const std::unordered_map<bhttp::verb, METHODS> resolver = {
       {bhttp::verb::get, METHODS::GET},
@@ -35,22 +38,17 @@ METHODS GetMethod(const Request& req)
   return resolver.at(req.method());
 }
 
-std::string GetRoute(const Request& req)
-{
-  const auto& target = req.target();
-  return {target.begin(), target.end()};
-}
-
-
 boost::asio::awaitable<void> RunSession(boost::asio::ip::tcp::socket client_socket,
                                         LoggerPtr infolog_ptr,
                                         LoggerPtr errorlog_ptr,
                                         const ConfigPtr& config,
                                         const RouterPtr& routes)
 {
+ // LOG_DURATION("SESSION TIME");
   Connection conn(std::move(client_socket), config->connection_timeout);
   static std::atomic<long long int> session_id = 0;
   long long int id = ++session_id;
+
   const auto& router_map = *routes;
 
   infolog_ptr->info("Session id{} started", id);

@@ -36,13 +36,15 @@ void Connection::Disconnect()
   is_alive_ = false;
 }
 
-auto ConnectTo(const std::string& url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>
+
+auto ConnectTo(std::string_view url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>
 {
   auto executor = co_await boost::asio::this_coro::executor;
   boost::asio::ip::tcp::resolver resolver(executor);
   try
   {
-    auto enabled_ips = co_await resolver.async_resolve(url, boost::asio::use_awaitable);
+    boost::asio::ip::tcp::resolver::query query(url.data(), "80");
+    auto enabled_ips = co_await resolver.async_resolve(query, boost::asio::use_awaitable);
 
     boost::asio::ip::tcp::socket socket(executor);
 
@@ -55,19 +57,17 @@ auto ConnectTo(const std::string& url) -> boost::asio::awaitable<std::optional<C
     spdlog::error("Exception when trying to connect to {}\n Exception message: {}", url, exc.what());
     co_return std::nullopt;
   }
+
+}
+
+auto ConnectTo(const std::string& url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>
+{
+  co_return co_await ConnectTo(std::string_view(url));
 }
 
 auto ConnectTo(std::string&& url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>
 {
-  auto res = co_await ConnectTo(url);
-  co_return res;
+  co_return co_await ConnectTo(std::string_view(url));
 }
-
-
-auto ConnectTo(std::string_view url) -> boost::asio::awaitable<std::optional<ConnectionPtr>>
-{
-  auto res = co_await ConnectTo(std::string(url.begin(), url.end()));
-}
-
 } // namespace http
 } // namespace bjo
