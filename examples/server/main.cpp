@@ -13,6 +13,8 @@
 
 #include "bjo/http.hpp"
 
+#include <profile.hpp>
+
 void SoftQuit(int signal)
 {
   fmt::print(fmt::fg(fmt::color::green), "FINISHED BY SIGNAL {}.", signal);
@@ -26,18 +28,12 @@ void HandleSIGSEGV(int signal)
   std::exit(EXIT_FAILURE);
 }
 
-class Handler : public bjo::http::server::HandlerBase
+class AsClass
 {
 public:
-  static constexpr ctll::fixed_string route = "/";
-
-  [[nodiscard]] bool CanHandle(std::string_view target) const override
+  boost::asio::awaitable<bjo::http::Response> operator()(const bjo::http::Request& request)
   {
-    return ctre::match<route>(target);
-  }
 
-  boost::asio::awaitable<bjo::http::Response> Handle(const bjo::http::Request& request) const override
-  {
     spdlog::info("Handling {}", request.target());
     bjo::http::Response result = {};
     result.body() = R"(Hello world!)";
@@ -46,8 +42,18 @@ public:
   }
 };
 
+boost::asio::awaitable<bjo::http::Response> AsFunc(const bjo::http::Request& request)
+{
+  spdlog::info("Handling {}", request.target());
+  bjo::http::Response result = {};
+  result.body() = "From func\n";
+  result.prepare_payload();
+  co_return result;
+}
+
 int main(int argc, char** argv)
 {
+
   spdlog::set_pattern("[%H:%M:%S %z] [thread %t] %v");
   spdlog::info("app started");
   // Setting up handlers for default OS signals.
@@ -60,7 +66,8 @@ int main(int argc, char** argv)
 
   bjo::http::Server server(bjo::http::server::DefaultConfig());
   server.RegisterHandlers()
-      (bjo::http::METHODS::GET, std::make_unique<Handler>())
+      (bjo::http::METHODS::GET, bjo::http::server::Route<"/">(), AsClass{})
+      (bjo::http::METHODS::GET | bjo::http::METHODS::POST, bjo::http::server::Route<"/post">(), AsFunc)
   ;
   server.Serve();
 

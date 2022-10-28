@@ -2,7 +2,7 @@
 
 #include "bjo/http/server/config.hpp"
 #include "bjo/http/server/listener.hpp"
-#include "bjo/http/server/routes/routes.hpp"
+#include "bjo/http/server/routes.hpp"
 #include "bjo/http/server/session/session.hpp"
 #include "bjo/task_processor.hpp"
 
@@ -25,6 +25,8 @@ public:
 
   void Serve();
 
+  void AttachInfoLogger(LoggerPtr logger);
+  void AttachErrorLogger(LoggerPtr logger);
 
 
 private:

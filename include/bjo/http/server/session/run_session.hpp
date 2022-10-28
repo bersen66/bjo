@@ -2,11 +2,10 @@
 
 #include <boost/asio.hpp>
 
-#include "bjo/http/server/logger_ptr.hpp"
 #include "bjo/http/server.hpp"
 #include "bjo/http/server/config.hpp"
-#include "bjo/http/server/routes/routes.hpp"
-
+#include "bjo/http/server/logger_ptr.hpp"
+#include "bjo/http/server/routes.hpp"
 
 namespace bjo
 {

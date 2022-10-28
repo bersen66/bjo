@@ -44,7 +44,7 @@ boost::asio::awaitable<void> RunSession(boost::asio::ip::tcp::socket client_sock
                                         const ConfigPtr& config,
                                         const RouterPtr& routes)
 {
- // LOG_DURATION("SESSION TIME");
+  LOG_DURATION("SESSION TIME");
   Connection conn(std::move(client_socket), config->connection_timeout);
   static std::atomic<long long int> session_id = 0;
   long long int id = ++session_id;
@@ -56,6 +56,7 @@ boost::asio::awaitable<void> RunSession(boost::asio::ip::tcp::socket client_sock
   {
     for (; conn.IsAlive();)
     {
+
       auto optional_req = co_await conn.FetchRequest();
 
       if (!optional_req.has_value())
@@ -70,7 +71,7 @@ boost::asio::awaitable<void> RunSession(boost::asio::ip::tcp::socket client_sock
       const auto& handler = router_map[GetMethod(request)][
           std::string_view(request.target().data(), request.target().size())
       ];
-      Response res = co_await handler->Handle(request);
+      Response res = co_await handler(request);
       infolog_ptr->info("SessionId{}: Generated response:\n {}\n",id, res);
       co_await conn.SendResponse(std::move(res));
     }

@@ -4,7 +4,9 @@
 #include <memory>
 #include <unordered_map>
 
+#include "bjo/http/server/routes/handlers/handler.hpp"
 #include "bjo/http/server/routes/handlers/handlers_map.hpp"
+#include "bjo/http/server/routes/route.hpp"
 
 namespace bjo
 {
@@ -21,7 +23,7 @@ public:
   public:
     explicit RouterEasyInit(Router* router_ptr);
 
-    RouterEasyInit& operator()(METHODS methods, HandlerHolder handler);
+    RouterEasyInit& operator()(METHODS methods, PatternPtr&& pattern, HandlerHolder handler);
 
   private:
     Router* router_ptr;
@@ -30,12 +32,10 @@ public:
 public:
   RouterEasyInit RegisterHandlers();
 
-  bool Contains(std::string_view route) const;
-
   const HandlersMap& operator[](METHODS method) const;
 
 private:
-  void InsertHandler(METHODS methods, HandlerHolder&& handler);
+  void InsertHandler(METHODS methods, PatternPtr&& route, HandlerHolder&& handler);
 
 private:
   std::unordered_map<METHODS, HandlersMap> method_map;

@@ -2,9 +2,10 @@
 
 #include <optional>
 
-#include "bjo/http/server/handler.hpp"
-#include "bjo/http/server/routes/handlers/handlers.hpp"
+#include "bjo/http/server/routes/handlers.hpp"
+#include "bjo/http/server/routes/handlers/handler.hpp"
 #include "bjo/http/server/routes/handlers/handlers_map.hpp"
+#include "bjo/http/server/routes/route.hpp"
 #include "profile.hpp"
 
 namespace bjo
@@ -20,31 +21,31 @@ const HandlerHolder& HandlersMap::operator[](std::string_view route) const
   return GetHandler(route);
 }
 
-bool HandlersMap::CanHandle(std::string_view route) const
-{
-  for (const auto& handler_ptr : handlers_)
-  {
-    if (handler_ptr->CanHandle(route))
-    {
-      return true;
-    }
-  }
-  return false;
-}
+//bool HandlersMap::CanHandle(std::string_view route) const
+//{
+//  for (const auto& handler_ptr : handlers_)
+//  {
+//    if (handler_ptr->CanHandle(route))
+//    {
+//      return true;
+//    }
+//  }
+//  return false;
+//}
 
-void HandlersMap::InsertHandler(HandlerHolder&& handler)
+void HandlersMap::InsertHandler(PatternPtr&& pattern_ptr, HandlerHolder&& handler)
 {
   //LOG_DURATION("INSERT HANDLER TIME");
-  handlers_.emplace_back(std::move(handler));
+  handlers_[std::move(pattern_ptr)] = std::move(handler);
 }
 
 const HandlerHolder& HandlersMap::GetHandler(std::string_view route) const
 {
-  for (const auto& handler_ptr : handlers_)
+  for (const auto& [pattern_ptr, handler] : handlers_)
   {
-    if (handler_ptr->CanHandle(route))
+    if (pattern_ptr->Match(route))
     {
-      return handler_ptr;
+      return handler;
     }
   }
   throw std::runtime_error("HandlersMap: no handlers for this route.");

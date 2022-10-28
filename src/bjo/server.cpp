@@ -30,6 +30,17 @@ void Server::Serve()
   listener_.StartListening();
 }
 
+void Server::AttachInfoLogger(LoggerPtr logger)
+{
+  info_log_ = logger;
+  listener_.AttachInfoLogger(info_log_);
+}
+
+void Server::AttachErrorLogger(LoggerPtr logger)
+{
+  error_log_ = logger;
+  listener_.AttachErrorLogger(error_log_);
+}
 
 } // namespace http
 } // namespace bjo

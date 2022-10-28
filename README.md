@@ -116,67 +116,61 @@ bjo предоставляет пользователю удобную и эфф
 
 Для того чтобы запустить http::Server в bjo нужно:
 
-* Задать обработчики на соответствующие таргеты (об этом позже)
+* Задать обработчики на соответствующие таргеты
 * Зарегистрировать их в сервере
 * Запустить сервер
 
-#### ПРИМЕР:
+#### ПРИМЕР СОЗДАНИЯ СЕРВЕРА:
 
 ```c++
-  using namespace bjo;
-  http::server::Server server(http::server::DefaultConfig()); 
+namespace asio = boost::asio;
+namespace http = bjo::http;
+
+  http::Server server(http::server::DefaultConfig());
+  
   server.RegisterHandlers()
-      (http::METHODS::GET | http::METHODS::POST, std::make_unique<Handler>())
-      (http::METHODS::GET, std::make_unique<HandlerTwo>())
-      (http::METHODS::GET, std::make_unique<HandleFavicon>())
+      (http::METHODS::GET, http::server::Route<"/">(), AsClass{})
+      (http::METHODS::GET | http::METHODS::POST, http::server::Route<"/users/id=[0-9]+">(), AsFunc)
+      (http::METHODS::GET, http::server::Route<"/values">(),
+        [](const http::Request& req) -> asio::awaitable<http::Response> {
+          // Handler can be implemented as lambda
+        }
+      )
   ;
-  server.Serve(); // Start server
+  
+  server.Serve(); // starts server
+
 ```
 
 #### ВАЖНО
 
-* При регистрации обработчика, сервер ожидает получить ```std::unique_ptr``` на
-  класс-наследник от
-  ```bjo::http::server::HandlerBase```. Я принял решение использовать
-  динамический полиморфизм для того, чтобы у
-  пользователя
-  была возможность использовать библиотеку ```ctre``` при проверке и парсинге
-  заголовков в обработчиках.
+* Обработчик http запроса должен иметь сигнатуру
+  вида ```asio::awaitable< http::Response > (const http::Request& req)```
+* Объект типа http::server::Route принимает шаблонным параметром регулярное
+  выражение, описывающее паттерн, с которым будет сравниваться роут из заголовка
 
 #### ПРИМЕР ОБРАБОТЧИКА
 
 ```c++
-class Handler : public bjo::http::server::HandlerBase
-{
-public:
-  // Паттерн подходящего таргета
-  static constexpr ctll::fixed_string route = "/hello/id=[0-9]+/world/[0-9a-z]+"; 
+namespace asio = boost::asio;
+namespace http = bjo::http;
 
-  bool CanHandle(std::string_view target) const override
-  {
-    /*
-     * Здесь мы должны проверить и дать сигнал, что данный обработчик может запуститься на этот запрос 
-     * Так роутер поймет, что этот обработчик должен быть вызван.
-     */
-    return ctre::match<route>(target);
-  }
+// As Function
+asio::awaitable<http::Response> AsFunction(const http::Request& req);
 
-  // Метод обработки запроса
-  boost::asio::awaitable<http::Response> Handle(const http::Request&) const override
-  {
-    http::Response result = {};
-    /*
-     * Здесь начинается бизнес-логика
-     */
-    result.prepare_payload();
-    co_return result;
-  }
+
+// As Lambda, that returns asio::awaitable<bjo::http::Response>
+[](const http::Request& req) -> asio::awaitable<http::Response> {} 
+
+
+// As Class
+struct Handler {
+    asio::awaitable<http::Response> operator()(const http::Request& req) {} 
 };
 ```
 
-В принципе, пользователь может реализовывать метод проверки любым удобным ему
-способом
+### bjo::http::Request и bjo::http::Response
 
 Классы ```bjo::http::Request``` и ```bjo::http::Response``` - это alias-ы для
-реализаций из boost::beast.
+реализаций из boost::beast. 
 
