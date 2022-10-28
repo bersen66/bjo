@@ -28,7 +28,6 @@ public:
   void AttachInfoLogger(LoggerPtr logger);
   void AttachErrorLogger(LoggerPtr logger);
 
-
 private:
   TaskProcessor session_processor_;
   server::Listener listener_;

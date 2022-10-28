@@ -107,6 +107,18 @@ TaskProcessor-ы на типы решаемых задач и
 
 #### Пример использования:
 
+```c++
+// Run task in detached mode. Don't wait completion.
+ task_processor_.ProcessTask(Listen(), asio::detached); 
+
+// When we need to perform task in another executor and fetch results.
+auto result =  co_await task_processor_.ProcessTask(Coro(), asio::use_awaitable);
+
+// using futures
+std::future<Тип> res = task_processor_.ProcessTask(FutureTask(), asio::use_future);
+// to get results type res.get() 
+```
+
 ### bjo::http::Server
 
 bjo предоставляет пользователю удобную и эффективную высокоуровневую абстракцию,

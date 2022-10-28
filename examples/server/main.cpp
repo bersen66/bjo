@@ -9,8 +9,6 @@
 #include <boost/asio.hpp>
 #include <boost/stacktrace.hpp>
 
-#include <ctre.hpp>
-
 #include "bjo/http.hpp"
 
 #include <profile.hpp>
@@ -56,8 +54,8 @@ int main(int argc, char** argv)
 
   spdlog::set_pattern("[%H:%M:%S %z] [thread %t] %v");
   spdlog::info("app started");
-  // Setting up handlers for default OS signals.
 
+  // Setting up handlers for default OS signals.
   std::signal(SIGINT, SoftQuit);  // Close by Ctrl + C
   std::signal(SIGQUIT, SoftQuit); // Close by Ctrl + \ or Ctrl + 4 or SysRq
   std::signal(SIGHUP, SoftQuit);  // Close by disconnect
