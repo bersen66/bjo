@@ -8,7 +8,7 @@ find_package(Boost REQUIRED)
 if (Boost_FOUND)
     message("TESTS: Boost FOUND")
     include_directories(${Boost_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} Boost::system Boost::thread Boost::stacktrace_backtrace)
 endif()
 
 find_package(spdlog REQUIRED)

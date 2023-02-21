@@ -3,12 +3,12 @@
 #include <boost/lexical_cast.hpp>
 #include <fstream>
 #include <iostream>
+#include <json/json.h>
 #include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
 #include <yaml-cpp/yaml.h>
-#include <json/json.h>
 
 namespace bjo
 {
@@ -29,7 +29,7 @@ std::pair<std::string_view, std::optional<std::string_view>> SplitTwoStrict(std:
   }
 }
 
-std::vector<std::string_view> SplitLineIntoTokensViews(std::string_view line, std::string_view delimeter)
+std::vector<std::string_view> SplitLineIntoTokenViews(std::string_view line, std::string_view delimeter)
 {
   std::vector<std::string_view> result;
 
@@ -69,7 +69,7 @@ std::pair<std::string_view, std::string_view> SplitTwo(std::string_view s, std::
   return {lhs, rhs_opt.value_or("")};
 }
 
-std::string_view ReadToken(std::string_view& s, std::string_view delimiter)
+std::string_view NextTokenView(std::string_view& s, std::string_view delimiter)
 {
   const auto [lhs, rhs] = SplitTwo(s, delimiter);
   s = rhs;
@@ -80,6 +80,7 @@ std::string GetTextFromStream(std::istream& input)
 {
   return {std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>()};
 }
+
 std::optional<std::string> GetTextFromFile(const std::filesystem::path& path_to_file)
 {
   if (!std::filesystem::exists(path_to_file))
@@ -100,13 +101,13 @@ std::optional<std::string> GetTextFromFile(const std::filesystem::path& path_to_
 
 int NextInt(std::string_view& s, std::string_view delimeter)
 {
-  std::string_view token = ReadToken(s, delimeter);
+  std::string_view token = NextTokenView(s, delimeter);
   return boost::lexical_cast<int>(token);
 }
 
 double NextDouble(std::string_view& s, std::string_view delimeter)
 {
-  std::string_view token = ReadToken(s, delimeter);
+  std::string_view token = NextTokenView(s, delimeter);
   return boost::lexical_cast<double>(token);
 }
 
@@ -122,7 +123,6 @@ YAML::Node ParseYaml(const std::filesystem::path& path_to_config)
 {
   return YAML::LoadFile(path_to_config);
 }
-
 
 } // namespace parsers
 } // namespace bjo

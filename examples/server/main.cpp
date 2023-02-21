@@ -11,8 +11,9 @@
 
 #include "bjo/http.hpp"
 
-#include <profile.hpp>
-
+/***
+ * Implementation of handlers for default OS signals
+ */
 void SoftQuit(int signal)
 {
   fmt::print(fmt::fg(fmt::color::green), "FINISHED BY SIGNAL {}.", signal);
@@ -26,9 +27,17 @@ void HandleSIGSEGV(int signal)
   std::exit(EXIT_FAILURE);
 }
 
+/***
+ * You can implement handlers in a multiple ways.
+ *
+ * Your handler can be represented as class with overloaded operator()
+ */
 class AsClass
 {
 public:
+  /**
+   * Your class have to overload operator () with following return value and parameters
+   */
   boost::asio::awaitable<bjo::http::Response> operator()(const bjo::http::Request& request)
   {
 
@@ -55,18 +64,35 @@ int main(int argc, char** argv)
   spdlog::set_pattern("[%H:%M:%S %z] [thread %t] %v");
   spdlog::info("app started");
 
-  // Setting up handlers for default OS signals.
-  std::signal(SIGINT, SoftQuit);  // Close by Ctrl + C
-  std::signal(SIGQUIT, SoftQuit); // Close by Ctrl + \ or Ctrl + 4 or SysRq
-  std::signal(SIGHUP, SoftQuit);  // Close by disconnect
-  std::signal(SIGTERM, SoftQuit);
-  std::signal(SIGSEGV, HandleSIGSEGV); // Smth bad in memory
+  { // Setting up handlers for default OS signals.
+#ifdef SIGINT
+    std::signal(SIGINT, SoftQuit); // Close by Ctrl + C
+#endif
+#ifdef SIGQUIT
+    std::signal(SIGQUIT, SoftQuit); // Close by Ctrl + \ or Ctrl + 4 or SysRq
+#endif
+#ifdef SIGHUP
+    std::signal(SIGHUP, SoftQuit); // Close by disconnect
+#endif
+#ifdef SIGTERM
+    std::signal(SIGTERM, SoftQuit);
+#endif
+#ifdef SIGSEGV
+    std::signal(SIGSEGV, HandleSIGSEGV); // Smth bad in memory
+#endif
+  }
 
+  /**
+   * You have to attach your handlers to server components before running server.
+   */
+
+  // clang-format off
   bjo::http::Server server(bjo::http::server::DefaultConfig());
   server.RegisterHandlers()
       (bjo::http::METHODS::GET, bjo::http::server::Route<"/">(), AsClass{})
       (bjo::http::METHODS::GET | bjo::http::METHODS::POST, bjo::http::server::Route<"/post">(), AsFunc)
   ;
+  // clang-format on
   server.Serve();
 
   return 0;
