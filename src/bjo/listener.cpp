@@ -11,7 +11,6 @@
 #define SPDLOG_FMT_EXTERNAL
 #include <spdlog/spdlog.h>
 
-#include "profile.hpp"
 #include "bjo/http/server.hpp"
 #include "bjo/http/server/config.hpp"
 #include "bjo/http/server/listener.hpp"

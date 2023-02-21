@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "bjo/http/connection.hpp"
+
 namespace bjo
 {
 namespace http
