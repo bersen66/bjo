@@ -28,7 +28,10 @@ add_library(
 
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 #option(ENABLE_TESTING "Enable testing" OFF)
-option(ENABLE_EXAMPLES "Enable examples" ON)
+option(ENABLE_EXAMPLES "Enable examples" OFF)
+if (IS_SUBPROJECT) 
+    set(ENABLE_EXAMPLES OFF)
+endif()
 #option(ENABLE_BENCHMARKS "Enable benchmarks" OFF)
 
 

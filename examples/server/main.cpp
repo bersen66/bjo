@@ -64,6 +64,7 @@ int main(int argc, char** argv)
 
   spdlog::set_pattern("[%H:%M:%S %z] [thread %t] %v");
   spdlog::info("app started");
+  spdlog::set_level(spdlog::level::debug);
 
   { // Setting up handlers for default OS signals.
 #ifdef SIGINT

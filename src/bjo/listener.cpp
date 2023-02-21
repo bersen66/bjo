@@ -3,18 +3,13 @@
 
 #include <boost/asio.hpp>
 
-#define BOOST_STACKTRACE_USE_BACKTRACE
 #include <boost/stacktrace.hpp>
 
 #include <utility>
 
-#define SPDLOG_FMT_EXTERNAL
-#include <spdlog/spdlog.h>
-
 #include "bjo/http/server.hpp"
 #include "bjo/http/server/config.hpp"
 #include "bjo/http/server/listener.hpp"
-#include "bjo/http/server/session/session.hpp"
 
 namespace bjo
 {
@@ -56,7 +51,6 @@ boost::asio::awaitable<void> Listener::Listen()
 
   for (;;)
   {
-    //LOG_DURATION("Iteration time");
     try
     {
       if (infolog_ptr_)
